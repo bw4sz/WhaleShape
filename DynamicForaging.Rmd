@@ -281,7 +281,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=1000,n.burnin=500,n.thin=5,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10000,n.burnin=9000,n.thin=5,DIC=FALSE))
 }
 
 ```
@@ -306,7 +306,8 @@ gc()
 #bind chains
 pc<-melt(jagM$BUGSoutput$sims.array)
 
-#rm(jagM)
+rm(jagM)
+gc()
 
 colnames(pc)<-c("Draw","chain","par","value")
 
@@ -389,7 +390,8 @@ ggplot(data=pc[!pc$parameter %in% c("phi","state"),],aes(x=value)) + geom_histog
 
 ```{r}
 g<-pc[pc$parameter %in% c("gamma"),] %>% mutate(bstate=ifelse(Behavior==1,"Traveling","Area-restricted Search"))
-ggplot(data=g,aes(x=value,fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Degree of movement autocorrelation") + scale_fill_brewer(palette="Set2")
+ggplot(data=g,aes(x=value,fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Degree of movement autocorrelation") + scale_fill_brewer(palette="RdBu")
+
 ggsave("Figures/Gammaplot.jpeg",height=4,width=6,dpi=300)
 ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxplot() + theme_bw()  + ggtitle("Estimated parameters") + facet_wrap(~Behavior)
 ```
@@ -398,7 +400,7 @@ ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxp
 
 ```{r}
 a<-pc[pc$parameter %in% c("alpha_mu"),] %>% mutate(bstate=ifelse(Behavior==1,"Remain Traveling ","Switch to Traveling"))
-ggplot(data=a,aes(x=inv.logit(value),fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Transition Probability") + scale_fill_brewer(palette="Set2")
+ggplot(data=a,aes(x=inv.logit(value),fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Transition Probability") + scale_fill_brewer(palette="RdBu")
 ggsave("Figures/Alphaplot.jpeg",height=4,width=6,dpi=300)
 ```
 
@@ -463,7 +465,7 @@ ggplot(data=mxy,aes(x=as.POSIXct(timestamp),y=as.factor(state))) + geom_line(aes
 
 #Simulated tracks
 
-```{r}
+```{r,fig.height=8,fig.width=7}
 source("Sim.R")
 
 #format gamma df
@@ -500,7 +502,7 @@ colnames(mt)[colnames(mt) %in% 'L1']<-"Month"
 colnames(mt)[colnames(mt) %in% 'L2']<-"Animal"
 
 mt$Month<-factor(mt$Month,levels=month.name)
-ggplot(mt,aes(x=x,y=y)) + theme_bw()  + geom_path(aes(col=State,group=Animal),size=1)+ facet_wrap(~Month,scales='free') + theme_classic() + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="")
+ggplot(mt,aes(x=x,y=y)) + theme_bw()  + geom_path(aes(col=State,group=Animal),size=1)+ facet_wrap(~Month,scales='free')  + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="")
 ggsave("Figures/SimulatedTracks.jpg",dpi=300,height=4,width=7)
 ```
 
