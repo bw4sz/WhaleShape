@@ -47,12 +47,12 @@ mxy$Animal<-mxy$individual.local.identifier
 mxy$x<-mxy$location.long
 mxy$y<-mxy$location.lat
 
-#remove minke whales
+#remove minke whales, they should already be gone.
 minke<-c("131117","131118","131120","154184")
 mxy<-mxy[!mxy$individual.local.identifier %in% minke,]
 
 #grab set of animals
-#mxy<-mxy[mxy$Animal %in% c("112699","121207","131151"),]
+mxy<-mxy[mxy$Animal %in% c("112699","121207","131151"),]
 
 #empty coordinates
 mxy<-mxy[!is.na(mxy$x),]
@@ -281,7 +281,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10000,n.burnin=9000,n.thin=5,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10,n.burnin=0,n.thin=1,DIC=FALSE))
 }
 
 ```
@@ -392,7 +392,7 @@ ggplot(data=pc[!pc$parameter %in% c("phi","state"),],aes(x=value)) + geom_histog
 g<-pc[pc$parameter %in% c("gamma"),] %>% mutate(bstate=ifelse(Behavior==1,"Traveling","Area-restricted Search"))
 ggplot(data=g,aes(x=value,fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Degree of movement autocorrelation") + scale_fill_brewer(palette="RdBu")
 
-ggsave("Figures/Gammaplot.jpeg",height=4,width=6,dpi=300)
+ggsave("Figures/Gammaplot.jpeg",height=3,width=6,dpi=300)
 ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxplot() + theme_bw()  + ggtitle("Estimated parameters") + facet_wrap(~Behavior)
 ```
 
@@ -401,7 +401,7 @@ ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxp
 ```{r}
 a<-pc[pc$parameter %in% c("alpha_mu"),] %>% mutate(bstate=ifelse(Behavior==1,"Remain Traveling ","Switch to Traveling"))
 ggplot(data=a,aes(x=inv.logit(value),fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Transition Probability") + scale_fill_brewer(palette="RdBu")
-ggsave("Figures/Alphaplot.jpeg",height=4,width=6,dpi=300)
+ggsave("Figures/Alphaplot.jpeg",height=3,width=6,dpi=300)
 ```
 
 
@@ -555,7 +555,8 @@ mr<-runs %>% group_by(Behavior,MonthA) %>% summarize(mean=mean(hours),lower=quan
 mr$bstate<-as.factor(mr$Behavior)
 levels(mr$bstate)=c("Traveling","Foraging")
 
-ggplot(mr,aes(x=bstate,y=mean,ymin=lower,ymax=upper,col=MonthA)) + geom_pointrange(size=1.2,alpha=.7,position=position_jitter(width = 0.2,height=0)) + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours",col="Month",x="Behavior")
+ggplot(mr,aes(x=bstate,y=mean,ymin=lower,ymax=upper,col=MonthA)) + geom_pointrange(size=1.2,alpha=.8,position=position_jitter(width = 0.2,height=0)) + labs(y="Hours",col="Month",x="Behavior") + scale_color_brewer(palette = "RdBu")
+
 ggsave("Figures/Duration.jpeg",height=4,width=6,dpi=300)
 ggplot(runs,aes(x=Behavior,y=hours,fill=MonthA)) + geom_boxplot() + theme_bw()
 ggplot(runs,aes(x=hours,fill=MonthA)) + geom_density() + theme_bw() + facet_wrap(~Behavior)
@@ -645,10 +646,13 @@ restime<-function(mxy){
 }
 
 plot(restime(mxy))
-#split tracks by month data
-md<-split(mxy,mxy$Month,drop=T)
+
+#split tracks by month data, just get foraging data
+md<-split(mxy[mxy$state==2,],mxy[mxy$state==2,"Month"],drop=T)
 
 r<-stack(lapply(md,restime))
+
+plot(r)
 
 #turn to 
 f<-melt(data.frame(rasterToPoints(r)),id.vars=c("x","y"))
