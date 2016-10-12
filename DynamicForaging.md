@@ -207,27 +207,12 @@ cat("
 sink()
 
 
-```
-##      user    system   elapsed 
-##   414.979     2.812 31494.600
-```
 
 
 
 
 ##Chains
 
-```
-##             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells   1527227   81.6    3886542  207.6   3886542  207.6
-## Vcells 205020789 1564.2  379486376 2895.3 373648098 2850.8
-```
-
-```
-##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  1345035  71.9    3886542  207.6   3886542  207.6
-## Vcells 34102470 260.2  303589100 2316.3 373648098 2850.8
-```
 
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
@@ -245,7 +230,7 @@ sink()
 
 # Change in transition probabilities over time
 
-![](DynamicForaging_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+![](DynamicForaging_files/figure-html/unnamed-chunk-19-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-19-2.png)<!-- -->
 
 
 ## Parameter Summary
@@ -309,7 +294,7 @@ sink()
 
 ## Duration by month
 
-![](DynamicForaging_files/figure-html/unnamed-chunk-26-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-26-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-26-3.png)<!-- -->
+![](DynamicForaging_files/figure-html/unnamed-chunk-26-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-26-2.png)<!-- -->
 
 
 
