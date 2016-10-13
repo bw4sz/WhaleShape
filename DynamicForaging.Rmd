@@ -27,10 +27,10 @@ library(R2jags)
 library(maptools)
 library(reshape2)
 #New model to be run, flag turned off if just updating.
-newModel<-T
+newModel<-F
 ```
 
-```{r,eval=F}
+```{r,eval=T}
 #Load in data
 load("DynamicForaging.RData")
 #jags$recompile()
@@ -149,7 +149,7 @@ Specify a duration, calculate the number of tracks and the number of removed poi
 
 ```{r}
 ##Time is the beginning of the first point.
-step_length=6
+step_length=12
 
 sxy<-split(mxy,mxy$Animal)
 
@@ -177,7 +177,7 @@ timed<-function(d,step_length){
   return(d)
   }
 
-sxy<-lapply(sxy,timed,step_length=6)
+sxy<-lapply(sxy,timed,step_length=12)
 
 #Format matrices for jags
 mxy<-rbind_all(sxy)
@@ -197,6 +197,15 @@ mxy<-rbind_all(sxy)
 
 #refactor animal
 mxy$Animal<-as.numeric(as.factor(mxy$Animal))
+```
+
+### After filitering
+
+```{r,fig.height=12}
+mxy$Month<-factor(mxy$Month,levels=month.name)
+m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color = "bw")
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=as.factor(Animal)),size=.5)  + facet_wrap(~Month,nrow=2) + scale_color_discrete(guide="none") + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="")
+ggsave("Figures/RawTracks.jpg",dpi=300,height=5,width=7)
 ```
 
 
@@ -294,7 +303,7 @@ jagM <- update(jagM,n.iter=300,n.burnin=0,n.thin=0)
 ```
 
 ##Chains
-```{r,eval=T}
+```{r,eval=F}
 
 #delete jags objects
 #rm(data)
@@ -401,7 +410,10 @@ ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxp
 ```{r}
 a<-pc[pc$parameter %in% c("alpha_mu"),] %>% mutate(bstate=ifelse(Behavior==1,"Remain Traveling ","Switch to Traveling"))
 ggplot(data=a,aes(x=inv.logit(value),fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Transition Probability") + scale_fill_brewer(palette="RdBu")
-ggsave("Figures/Alphaplot.jpeg",height=3,width=6,dpi=300)
+ggsave("Figures/Alphaplot.jpeg",height=4,width=6,dpi=300)
+
+ggplot(data=a,aes(y=inv.logit(value),x=MonthA)) + geom_boxplot() + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(x="Month",y="Transition Probability") + scale_fill_brewer(palette="RdBu")
+
 ```
 
 
@@ -452,8 +464,17 @@ mxy<-merge(mxy,mode_state,by=c("step","Track","Animal"))
 mxy<-mxy %>% arrange(Animal,Track,step,jStep)
 
 rm(behav_chains)
+
+#make factor
+mxy$bstate<-factor(mxy$state)
+levels(mxy$bstate)<-c("Traveling","Area Restricted Search")
 ```
 
+#Behavior Prediction
+```{r}
+m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color="bw")
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5)   + theme_inset()
+```
 
 ##Autocorrelation in behavior
 
@@ -465,7 +486,7 @@ ggplot(data=mxy,aes(x=as.POSIXct(timestamp),y=as.factor(state))) + geom_line(aes
 
 #Simulated tracks
 
-```{r,fig.height=8,fig.width=7}
+```{r,fig.height=8,fig.width=12}
 source("Sim.R")
 
 #format gamma df
@@ -555,11 +576,11 @@ mr<-runs %>% group_by(Behavior,MonthA) %>% summarize(mean=mean(hours),lower=quan
 mr$bstate<-as.factor(mr$Behavior)
 levels(mr$bstate)=c("Traveling","Foraging")
 
-ggplot(mr,aes(x=bstate,y=mean,ymin=lower,ymax=upper,col=MonthA)) + geom_pointrange(size=1.2,alpha=.8,position=position_jitter(width = 0.2,height=0)) + labs(y="Hours",col="Month",x="Behavior") + scale_color_brewer(palette = "RdBu")
-
+ggplot(mr,aes(x=MonthA,y=mean,ymin=lower,ymax=upper,col=MonthA)) + geom_pointrange(size=1.2,alpha=.7) + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours",col="Month",x="Behavior") + facet_wrap(~bstate,scales="free")
 ggsave("Figures/Duration.jpeg",height=4,width=6,dpi=300)
-ggplot(runs,aes(x=Behavior,y=hours,fill=MonthA)) + geom_boxplot() + theme_bw()
-ggplot(runs,aes(x=hours,fill=MonthA)) + geom_density() + theme_bw() + facet_wrap(~Behavior)
+
+ggplot(runs,aes(x=MonthA,y=hours)) + geom_boxplot() + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours",col="Month",x="Behavior") + facet_wrap(~Behavior,scales="free")
+
 ```
 
 
