@@ -52,7 +52,7 @@ minke<-c("131117","131118","131120","154184")
 mxy<-mxy[!mxy$individual.local.identifier %in% minke,]
 
 #grab set of animals
-mxy<-mxy[mxy$Animal %in% c("112699","121207","131151"),]
+#mxy<-mxy[mxy$Animal %in% c("112699","121207","131151"),]
 
 #empty coordinates
 mxy<-mxy[!is.na(mxy$x),]
@@ -189,7 +189,7 @@ sxy<-split(mxy,list(mxy$Animal,mxy$Track),drop=TRUE)
 
 sxy<-lapply(sxy,function(x){
 #How many observations in each step length segment
-x$step<-as.numeric(cut(as.POSIXct(x$timestamp),"6 hours"))
+x$step<-as.numeric(cut(as.POSIXct(x$timestamp),"12 hours"))
 return(x)
 })
 
@@ -290,11 +290,10 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10,n.burnin=0,n.thin=1,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10000,n.burnin=9000,n.thin=4,DIC=FALSE))
 }
 
 ```
-
 
 ```{r,eval=F}
 #update function
