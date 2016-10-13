@@ -27,10 +27,10 @@ library(R2jags)
 library(maptools)
 library(reshape2)
 #New model to be run, flag turned off if just updating.
-newModel<-F
+newModel<-T
 ```
 
-```{r,eval=T}
+```{r,eval=F}
 #Load in data
 load("DynamicForaging.RData")
 #jags$recompile()
@@ -302,7 +302,7 @@ jagM <- update(jagM,n.iter=300,n.burnin=0,n.thin=0)
 ```
 
 ##Chains
-```{r,eval=F}
+```{r,eval=T}
 
 #delete jags objects
 #rm(data)
