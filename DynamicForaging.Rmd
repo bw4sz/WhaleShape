@@ -475,7 +475,7 @@ levels(mxy$bstate)<-c("Traveling","Area Restricted Search")
 #Behavior Prediction
 ```{r}
 m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color="bw")
-ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5)   + theme_inset()
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5,alpha=0.7)   + theme_inset()
 ```
 
 ## Confidence
