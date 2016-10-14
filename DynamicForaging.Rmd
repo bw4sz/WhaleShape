@@ -60,9 +60,11 @@ mxy<-mxy[!is.na(mxy$x),]
 #crop by extent
 d<-SpatialPointsDataFrame(cbind(mxy$x,mxy$y),data=mxy,proj4string=CRS("+proj=longlat +datum=WGS84"))
 
-d<-crop(d,y=extent(c(-75,-50,-70,-57.5)))
+cropoly<-readShapePoly("InputData/CutPolygon.shp",proj4string=CRS("+proj=longlat +datum=WGS84"))
 
-mxy<-as.data.frame(d)
+b<-d[!is.na(d %over% cropoly)[,2],]
+
+#remove migration events, create user cut polygon
 
 #set datestamp
 mxy$timestamp<-as.POSIXct(mxy$timestamp,format="%Y-%m-%d %H:%M:%S.000")
@@ -290,7 +292,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10,n.burnin=0,n.thin=4,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=5000,n.burnin=4500,n.thin=4,DIC=FALSE))
 }
 
 ```
