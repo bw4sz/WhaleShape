@@ -98,7 +98,7 @@ cat("
     
     gamma[2,m] ~ dbeta(1.5, 2)		## gamma for state 2
     dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
-    gamma[1,m] <- gamma[2,m] + dev[m] 		## gamma for state 1
+    gamma[1,m] <- gamma[2,m] * dev[m] 		## gamma for state 1
     }
     
     
