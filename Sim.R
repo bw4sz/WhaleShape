@@ -1,4 +1,4 @@
-traj<-function(gamma=gamma,theta=theta,a1_mu,a1_sd,total_time=total_time,step_length){
+traj<-function(gamma=gamma,theta=theta,a1,total_time=total_time,step_length){
   
   ##Constants
   #time interval in days, divided into 4 hours intervals
@@ -15,14 +15,6 @@ traj<-function(gamma=gamma,theta=theta,a1_mu,a1_sd,total_time=total_time,step_le
   
   #Behavioral States (at time t)
   state<-c()
-  
-  
-  #indivdual variation intercept
-  a1<-c()
-  for(x in 1:2){
-    a1[x]<-rnorm(1,a1_mu[x],a1_sd[x])  
-  }
-  
   
   #Probability of staying in behavior
   phi<-matrix(nrow=steps,ncol=2)
@@ -72,10 +64,10 @@ traj<-function(gamma=gamma,theta=theta,a1_mu,a1_sd,total_time=total_time,step_le
     #Extract env
 
     #Behavior
-    phi[x,1] <- inv.logit(a1[state[x-1]])
+    phi[x,1] <- a1[state[x-1]]
     phi[x,2]<- 1 - phi[x,1]
     state[x] <- sample(c(1,2),size=1,prob=phi[x,])
-    
+
     #Movement correlation matrix
     T[x,1,1] <- cos(theta[state[x]])
     T[x,1,2] <- -sin(theta[state[x]])
@@ -101,7 +93,7 @@ traj<-function(gamma=gamma,theta=theta,a1_mu,a1_sd,total_time=total_time,step_le
   levels(dxy$State)<-c("Traveling","Feeding")
   
   #add time label
-  dxy$Hour<-seq(0,total_time*24,by=4)
+  dxy$Hour<-seq(0,total_time*24,by=step_length)
   
   ##Measurement model
   argosdf<-list()

@@ -290,7 +290,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=11000,n.burnin=10000,n.thin=4,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=1000,n.burnin=900,n.thin=4,DIC=FALSE))
 }
 
 ```
@@ -401,7 +401,7 @@ g<-pc[pc$parameter %in% c("gamma"),] %>% mutate(bstate=ifelse(Behavior==1,"Trave
 ggplot(data=g,aes(x=value,fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Degree of movement autocorrelation") + scale_fill_brewer(palette="RdBu")
 
 ggsave("Figures/Gammaplot.jpeg",height=3,width=6,dpi=300)
-ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxplot() + theme_bw()  + ggtitle("Estimated parameters") + facet_wrap(~Behavior)
+ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxplot() + theme_bw()  + ggtitle("Estimated parameters") + facet_wrap(~Behavior,scales="free")
 ```
 
 # Change in transition probabilities over time
@@ -455,6 +455,9 @@ mean_phi<-behav_chains %>% group_by(Animal,Track,step) %>% summarize(phi=mean(va
 #mode state for each position
 mode_state<-pc %>% filter(pc$parameter %in% "state") %>% group_by(Animal,Track,step) %>% summarize(state=as.numeric(names(which.max(table(value)))))
 
+mode_state<-pc %>% filter(pc$parameter %in% "state") %>% mutate(bstate=ifelse(value==1,"Traveling","Foraging")) %>% group_by(Animal,Track,step,bstate) %>% summarize(n=n()) %>% spread(key=bstate,value=n) %>% mutate(ratio=Foraging/Traveling) %>% mutate(state=as.character(ifelse(ratio>=1,"Foraging","Traveling")))
+
+
 mxy<-merge(mxy,mean_phi,by=c("step","Track","Animal"))
 
 mxy<-merge(mxy,mode_state,by=c("step","Track","Animal"))
@@ -475,8 +478,17 @@ m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",colo
 ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5)   + theme_inset()
 ```
 
+## Confidence
+```{r}
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=Animal),size=.5)   + theme_inset() +scale_color_continuous(low='blue',high='red')
+```
+
+## By individual
+
 ```{r}
 ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5)   + theme_inset() + facet_wrap(~Animal,scales="free")
+
+ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=paste(Animal,Track)),size=.5) + facet_wrap(~Animal,scales="free") + theme_inset() +scale_color_continuous(low='blue',high='red')
 ```
 
 ##Autocorrelation in behavior
@@ -505,7 +517,7 @@ mt<-lapply(gt,function(k){
   ind<-2
   
   #Total time length for each individual track
-  step.ind<-rep(20,4)
+  step.ind<-rep(50,4)
   
   #time for each step
   step_length=4
@@ -514,7 +526,7 @@ mt<-lapply(gt,function(k){
     
     #autocorrelation is the second row
     #transition is first row, needs to be logit transformed.
-      mxy[[x]]<-traj(gamma=as.numeric(k[2,2:3]),theta=c(0,0),a1_mu=inv.logit(as.numeric(k[1,2:3])),a1_sd=c(0.01,0.01),total_time = step.ind[x],step_length=step_length)
+      mxy[[x]]<-traj(gamma=as.numeric(k[2,2:3]),theta=c(6,0),a1=inv.logit(as.numeric(k[1,2:3])),total_time = step.ind[x],step_length=step_length)
   } 
   return(mxy)
 })
