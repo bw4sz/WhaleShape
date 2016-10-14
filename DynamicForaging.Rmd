@@ -290,7 +290,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=2000,n.burnin=1800,n.thin=4,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10,n.burnin=0,n.thin=4,DIC=FALSE))
 }
 
 ```
@@ -455,7 +455,7 @@ mean_phi<-behav_chains %>% group_by(Animal,Track,step) %>% summarize(phi=mean(va
 #mode state for each position
 mode_state<-pc %>% filter(pc$parameter %in% "state") %>% group_by(Animal,Track,step) %>% summarize(state=as.numeric(names(which.max(table(value)))))
 
-mode_state<-pc %>% filter(pc$parameter %in% "state") %>% mutate(bstate=ifelse(value==1,"Traveling","Foraging")) %>% group_by(Animal,Track,step,bstate) %>% summarize(n=n()) %>% spread(key=bstate,value=n) %>% mutate(ratio=Foraging/Traveling) %>% mutate(state=as.character(ifelse(ratio>=1,"Foraging","Traveling")))
+mode_state<-pc %>% filter(pc$parameter %in% "state") %>% mutate(bstate=ifelse(value==1,"Traveling","Foraging")) %>% group_by(Animal,Track,step,bstate) %>% summarize(n=n()) %>% spread(key=bstate,value=n,fill=0) %>% mutate(ratio=Foraging/Traveling) %>% mutate(state=as.character(ifelse(ratio>=1,"Foraging","Traveling")))
 
 
 mxy<-merge(mxy,mean_phi,by=c("step","Track","Animal"))
@@ -472,7 +472,6 @@ mxy$bstate<-factor(mxy$state)
 levels(mxy$bstate)<-c("Traveling","Area Restricted Search")
 ```
 
-#Behavior Prediction
 ```{r}
 m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color="bw")
 ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5,alpha=0.7)   + theme_inset()
@@ -684,7 +683,7 @@ restime<-function(mxy){
 plot(restime(mxy))
 
 #split tracks by month data, just get foraging data
-md<-split(mxy[mxy$state==2,],mxy[mxy$state==2,"Month"],drop=T)
+md<-split(mxy[mxy$bstate %in% "Area Restricted Search",],mxy[mxy$bstate %in% "Area Restricted Search","Month"],drop=T)
 
 r<-stack(lapply(md,restime))
 
