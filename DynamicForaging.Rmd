@@ -64,6 +64,8 @@ cropoly<-readShapePoly("InputData/CutPolygon.shp",proj4string=CRS("+proj=longlat
 
 b<-d[!is.na(d %over% cropoly)[,2],]
 
+mxy<-b@data
+
 #remove migration events, create user cut polygon
 
 #set datestamp
@@ -292,7 +294,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=50000,n.burnin=49000,n.thin=4,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=5000,n.burnin=4900,n.thin=4,DIC=FALSE))
 }
 
 ```
