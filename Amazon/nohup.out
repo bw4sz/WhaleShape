@@ -244,3 +244,12 @@ Switched to a new branch 'i-d0e30b0c'
 To git@github.com:bw4sz/WhaleShape.git
  * [new branch]      Branch i-d0e30b0c set up to track remote branch i-d0e30b0c from origin.
 i-d0e30b0c -> i-d0e30b0c
+Warning: Permanently added 'ec2-54-68-249-39.us-west-2.compute.amazonaws.com,54.68.249.39' (ECDSA) to the list of known hosts.
+Cloning into 'WhaleShape'...
+Switched to a new branch 'i-cacf2716'
+[i-cacf2716 5b91678] ec2 run complete
+ 1 file changed, 92 insertions(+), 322 deletions(-)
+ rewrite run.txt (84%)
+To git@github.com:bw4sz/WhaleShape.git
+ * [new branch]      i-cacf2716 -> i-cacf2716Branch i-cacf2716 set up to track remote branch i-cacf2716 from origin.
+
