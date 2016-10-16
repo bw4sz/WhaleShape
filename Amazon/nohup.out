@@ -265,3 +265,7 @@ Switched to a new branch 'i-2624ccfa'
 Connection reset by 54.70.191.28
 Connection reset by 54.71.70.225
 Connection reset by 54.71.1.133
+Warning: Permanently added 'ec2-54-70-153-72.us-west-2.compute.amazonaws.com,54.70.153.72' (ECDSA) to the list of known hosts.
+Cloning into 'WhaleShape'...
+Switched to a new branch 'i-81ac3499'
+Connection to ec2-54-70-153-72.us-west-2.compute.amazonaws.com closed by remote host.
