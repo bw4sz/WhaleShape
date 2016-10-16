@@ -441,25 +441,13 @@ simdf<-pc %>% filter(parameter %in% c("gamma","alpha_mu")) %>% group_by(MonthA,B
 
 #Behavioral Prediction
 
+
 ```{r}
-#We just need Foraging behavior
-behav_chains<-pc[pc$parameter %in% "phi" & pc$Behavior==2,]
-
-#arrange by time - capitalize
-behav_chains$step<-as.numeric(as.character(behav_chains$step))
-behav_chains<-behav_chains %>% arrange(step)
-
-#Label Behaviors
-behav_chains$Behavior<-as.factor(behav_chains$Behavior)
-levels(behav_chains$Behavior)<-c("Traveling","Area Restricted Search")
-
 #mean transition probability
-mean_phi<-behav_chains %>% group_by(Animal,Track,step) %>% summarize(phi=mean(value))
+mean_phi<-pc %>% filter(parameter=="phi",Behavior==2) %>% mutate(step=as.numeric(as.character(step))) %>% group_by(Animal,Track,step) %>% summarize(phi=mean(value)) %>% arrange(Animal,Track,step)
 
 #mode state for each position
-
-mode_state<-pc %>% filter(pc$parameter %in% "state") %>% mutate(bstate=ifelse(value==1,"Traveling","Foraging")) %>% group_by(Animal,Track,step,bstate) %>% summarize(n=n()) %>% spread(key=bstate,value=n,fill=0) %>% mutate(ratio=Foraging/Traveling) %>% mutate(state=as.character(ifelse(ratio>=1,"Foraging","Traveling")))
-
+mode_state<-pc %>% filter(parameter %in% "state") %>% mutate(bstate=ifelse(value==1,"Traveling","Area-restricted Search")) %>% group_by(Animal,Track,step,bstate) %>% summarize(n=n()) %>% spread(key=bstate,value=n,fill=0)%>% mutate(ratio=`Area-restricted Search`/Traveling) %>% mutate(state=as.character(ifelse(ratio>=1,"Area-restricted Search","Traveling")))
 
 mxy<-merge(mxy,mean_phi,by=c("step","Track","Animal"))
 
@@ -468,11 +456,8 @@ mxy<-merge(mxy,mode_state,by=c("step","Track","Animal"))
 #ensure order for plotting
 mxy<-mxy %>% arrange(Animal,Track,step,jStep)
 
-rm(behav_chains)
-
 #make factor
 mxy$bstate<-factor(mxy$state)
-levels(mxy$bstate)<-c("Traveling","Area Restricted Search")
 ```
 
 ```{r}
@@ -686,7 +671,7 @@ restime<-function(mxy){
 plot(restime(mxy))
 
 #split tracks by month data, just get foraging data
-md<-split(mxy[mxy$bstate %in% "Area Restricted Search",],mxy[mxy$bstate %in% "Area Restricted Search","Month"],drop=T)
+md<-split(mxy[mxy$bstate %in% "Area-restricted Search",],mxy[mxy$bstate %in% "Area-restricted Search","Month"],drop=T)
 
 r<-stack(lapply(md,restime))
 
