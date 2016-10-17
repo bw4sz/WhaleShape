@@ -28,6 +28,10 @@ library(maptools)
 library(reshape2)
 #New model to be run, flag turned off if just updating.
 newModel<-T
+
+##ggplot theme
+mytheme<-theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank())
+
 ```
 
 ```{r,eval=F}
@@ -96,7 +100,7 @@ d<-SpatialPointsDataFrame(cbind(mxy$x,mxy$y),data=mxy,proj4string=CRS("+proj=lon
 #Plot
 pp<-c(mean(mxy$x),mean(mxy$y))
 m <- get_map(location=pp,source="google",zoom=4,scale=2,maptype="satellite",color = "bw")
-ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=as.factor(Animal)),size=.5) + scale_color_discrete(guide="none") + theme_inset()
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=as.factor(Animal)),size=.5) + scale_color_discrete(guide="none") + mytheme
 ```
 
 ##By Month
@@ -264,7 +268,7 @@ mxy<-mxy %>% arrange(Animal,Track,step,jStep)
 
 pp<-c(mean(mxy$x),mean(mxy$y))
 m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color = "bw")
-ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=as.factor(Animal),group=paste(Animal,Track)),size=.5) + scale_color_discrete(guide="none") + theme_inset()
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=as.factor(Animal),group=paste(Animal,Track)),size=.5) + scale_color_discrete(guide="none") + mytheme
 ```
 
 
@@ -461,20 +465,20 @@ mxy$bstate<-factor(mxy$state)
 
 ```{r}
 m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color="bw")
-ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5,alpha=0.7)   + theme_inset()
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5,alpha=0.7)   + mytheme
 ```
 
 ## Confidence
 ```{r}
-ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=Animal),size=.5)   + theme_inset() +scale_color_continuous(low='blue',high='red')
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=Animal),size=.5)   + mytheme +scale_color_continuous(low='blue',high='red')
 ```
 
 ## By individual
 
 ```{r,fig.height=12}
-ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5)   + theme_inset() + facet_wrap(~Animal,scales="free")
+ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5)   + mytheme + facet_wrap(~Animal,scales="free")
 
-ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=paste(Animal,Track)),size=.5) + facet_wrap(~Animal,scales="free") + theme_inset() +scale_color_continuous(low='blue',high='red')
+ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=paste(Animal,Track)),size=.5) + facet_wrap(~Animal,scales="free") + mytheme +scale_color_continuous(low='blue',high='red')
 ```
 
 ##Autocorrelation in behavior
