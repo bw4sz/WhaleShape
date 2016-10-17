@@ -391,7 +391,6 @@ ggplot(pc[!pc$parameter %in% c("phi","state"),],aes(x=Draw,y=value)) + facet_wra
 pc$Behavior<-as.factor(pc$Behavior)
 ```
 
-
 ```{r,fig.height=20}
 #Plot
 ggplot(data=pc[!pc$parameter %in% c("phi","state"),],aes(x=value)) + geom_histogram() + facet_wrap(~par,scales='free',ncol=3) + theme_bw()  + ggtitle("Estimated parameters")
@@ -472,7 +471,7 @@ ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=Animal),size=.5)   + t
 
 ## By individual
 
-```{r}
+```{r,fig.height=12}
 ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5)   + theme_inset() + facet_wrap(~Animal,scales="free")
 
 ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=paste(Animal,Track)),size=.5) + facet_wrap(~Animal,scales="free") + theme_inset() +scale_color_continuous(low='blue',high='red')
@@ -480,9 +479,9 @@ ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=paste(Animal,Track)),s
 
 ##Autocorrelation in behavior
 
-```{r,fig.height=15,fig.width=11}
+```{r,fig.height=25,fig.width=11}
 #create proper time stamp
-ggplot(data=mxy,aes(x=as.POSIXct(timestamp),y=as.factor(state))) + geom_line(aes(group=Track),size=1)+ theme_bw()  + facet_wrap(~individual.local.identifier,ncol=3,scales="free") + labs(x="Time",y="Behavior") 
+ggplot(data=mxy,aes(x=as.POSIXct(timestamp),y=as.factor(state))) + geom_line(aes(group=Track),size=1)+ theme_bw()  + facet_wrap(~individual.local.identifier,ncol=2,scales="free") + labs(x="Time",y="Behavior") 
 ```
 
 
