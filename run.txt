@@ -90,7 +90,7 @@ label: unnamed-chunk-3
 
   |                                                                         |........                                                         |  12%
 label: unnamed-chunk-4
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-65.762848,-66.101192&zoom=4&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.89856,-64.164103&zoom=4&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |.........                                                        |  14%
   ordinary text without R code
 
@@ -99,7 +99,7 @@ label: unnamed-chunk-5 (with options)
 List of 1
  $ fig.height: num 12
 
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-65.762848,-66.101192&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.89856,-64.164103&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |...........                                                      |  17%
   ordinary text without R code
 
@@ -113,7 +113,7 @@ label: unnamed-chunk-7 (with options)
 List of 1
  $ fig.height: num 12
 
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-65.762848,-66.101192&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.89856,-64.164103&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |...............                                                  |  23%
   ordinary text without R code
 
@@ -125,7 +125,7 @@ Using jStep as value column: use value.var to override.
 
   |                                                                         |..................                                               |  27%
 label: unnamed-chunk-9
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-65.767965,-66.106721&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.918813,-64.202345&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |...................                                              |  29%
   ordinary text without R code
 
@@ -239,7 +239,7 @@ label: unnamed-chunk-22
 
   |                                                                         |.............................................                    |  70%
 label: unnamed-chunk-23
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-65.767965,-66.106721&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.918813,-64.202345&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |..............................................                   |  71%
   ordinary text without R code
 
@@ -249,14 +249,17 @@ label: unnamed-chunk-24
   ordinary text without R code
 
   |                                                                         |.................................................                |  76%
-label: unnamed-chunk-25
+label: unnamed-chunk-25 (with options) 
+List of 1
+ $ fig.height: num 12
+
   |                                                                         |..................................................               |  77%
   ordinary text without R code
 
   |                                                                         |...................................................              |  79%
 label: unnamed-chunk-26 (with options) 
 List of 2
- $ fig.height: num 15
+ $ fig.height: num 25
  $ fig.width : num 11
 
   |                                                                         |....................................................             |  80%
@@ -312,10 +315,18 @@ label: unnamed-chunk-33
 
 output file: DynamicForaging.knit.md
 
-/usr/local/bin/pandoc +RTS -K512m -RTS DynamicForaging.utf8.md --to html --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output DynamicForaging.html --smart --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/default.html --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmpR15qfi/rmarkdown-str58e2cb4781d.html --mathjax --variable 'mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --no-highlight --variable highlightjs=/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/highlight --variable navigationjs=/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/navigation-1.0 
+/usr/local/bin/pandoc +RTS -K512m -RTS DynamicForaging.utf8.md --to html --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output DynamicForaging.html --smart --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/default.html --number-sections --variable 'theme:spacelab' --include-in-header /tmp/RtmptNVhST/rmarkdown-str58f724168ff.html --mathjax --variable 'mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --no-highlight --variable highlightjs=/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/highlight --variable navigationjs=/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/navigation-1.0 
 
 Output created: DynamicForaging.html
 Warning messages:
-1: In .fun(.value[0], ...) :
+1: Removed 33 rows containing missing values (geom_path). 
+2: Removed 33 rows containing missing values (geom_path). 
+3: Removed 33 rows containing missing values (geom_path). 
+4: Removed 33 rows containing missing values (geom_path). 
+5: In .fun(.value[0], ...) :
   no non-missing arguments to min; returning Inf
-2: In rbind_all(splitpc) : Unequal factor levels: coercing to character
+6: Removed 42 rows containing missing values (geom_path). 
+7: In rbind_all(splitpc) : Unequal factor levels: coercing to character
+8: Removed 29 rows containing missing values (geom_path). 
+9: Removed 4 rows containing missing values (geom_tile). 
+10: Removed 4 rows containing missing values (geom_tile). 
