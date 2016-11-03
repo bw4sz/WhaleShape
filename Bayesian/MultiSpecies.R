@@ -77,7 +77,7 @@ cat("
     Sigma <- inverse(iSigma)
     
     ##Mean Angle
-    tmp[1] ~ dbeta(20, 20)
+    tmp[1] ~ dbeta(10, 10)
     tmp[2] ~ dbeta(10, 10)
     
     # prior for theta in 'traveling state'
@@ -96,9 +96,9 @@ cat("
     alpha_mu[1,m] ~ dnorm(0,0.386)
     alpha_mu[2,m] ~ dnorm(0,0.386)
     
-    gamma[2,m] ~ dbeta(1, 4)		## gamma for state 2
-    dev[m] ~ dunif(0.3,1)			## a random deviate to ensure that gamma[1] > gamma[2]
-    gamma[1,m] <- gamma[2,m] + dev[m]	## gamma for state 1
+    gamma[1,m] ~ dbeta(3, 2)		## gamma for state 1
+    dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
+    gamma[2,m] <- gamma[1,m] * dev[m]	## gamma for state 2
     }
     
     

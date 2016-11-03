@@ -30,7 +30,7 @@ library(reshape2)
 newModel<-T
 
 ##ggplot theme
-mytheme<-theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank())
+mytheme<-theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),panel.grid=element_blank())
 
 ```
 
@@ -56,7 +56,7 @@ minke<-c("131117","131118","131120","154184")
 mxy<-mxy[!mxy$individual.local.identifier %in% minke,]
 
 #grab set of animals
-#mxy<-mxy[mxy$Animal %in% c("131143","131142"),]
+mxy<-mxy[mxy$Animal %in% c("131143","131142"),]
 
 #empty coordinates
 mxy<-mxy[!is.na(mxy$x),]
@@ -110,6 +110,10 @@ mxy$Month<-factor(mxy$Month,levels=month.name)
 m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color = "bw")
 ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=as.factor(Animal)),size=.5)  + facet_wrap(~Month,nrow=2) + scale_color_discrete(guide="none") + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="")
 ggsave("Figures/RawTracks.jpg",dpi=300,height=5,width=7)
+
+#black and white
+ggplot()+geom_path(data=mxy, aes(x=x, y=y,group=Animal),size=.5)  + facet_wrap(~Month,nrow = 2)  + borders(fill="grey90") + coord_cartesian(ylim = c(-70,-61),xlim=c(-53,-73)) + theme_bw() + mytheme + scale_fill_manual(values=rep("NA",8)) + scale_color_discrete(guide="none")
+ggsave("Figures/MonthTracks_BW.jpeg",height=4, width=5)
 ```
 
 #Correlated random walk
@@ -157,7 +161,7 @@ Specify a duration, calculate the number of tracks and the number of removed poi
 
 ```{r}
 ##Time is the beginning of the first point.
-step_length=12
+step_length=6
 
 sxy<-split(mxy,mxy$Animal)
 
@@ -176,7 +180,7 @@ timed<-function(d,step_length){
   }
   
   #remove tracks that are shorter than three days
-  track_time<-d %>% group_by(Track) %>% summarize(mt=difftime(max(as.POSIXct(timestamp)),min(as.POSIXct(timestamp)),units="hours")) %>% filter(mt>=24) %>% .$Track
+  track_time<-d %>% group_by(Track) %>% summarize(mt=difftime(max(as.POSIXct(timestamp)),min(as.POSIXct(timestamp)),units="hours")) %>% filter(mt>=18) %>% .$Track
   
   d<-d[d$Track %in% track_time,]
   
@@ -185,7 +189,7 @@ timed<-function(d,step_length){
   return(d)
   }
 
-sxy<-lapply(sxy,timed,step_length=12)
+sxy<-lapply(sxy,timed,step_length=step_length)
 
 #Format matrices for jags
 mxy<-rbind_all(sxy)
@@ -197,7 +201,7 @@ sxy<-split(mxy,list(mxy$Animal,mxy$Track),drop=TRUE)
 
 sxy<-lapply(sxy,function(x){
 #How many observations in each step length segment
-x$step<-as.numeric(cut(as.POSIXct(x$timestamp),"12 hours"))
+x$step<-as.numeric(cut(as.POSIXct(x$timestamp),"6 hours"))
 return(x)
 })
 
@@ -256,9 +260,7 @@ obs<-melt(mxy,measure.vars=c("x","y"))
 obs<-acast(obs,Animal~Track~step~jStep~variable)
 
 MonthIndex<-acast(mxy,Animal~Track~step,value.var="Month",fun=function(x) names(which.max(table(x))) )
-
 ```
-
 
 How did the filter change the extent of tracks?
 
@@ -298,7 +300,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10000,n.burnin=9500,n.thin=5,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10,n.burnin=0,n.thin=1,DIC=FALSE))
 }
 
 ```
@@ -385,6 +387,9 @@ pc$MonthA<-factor(pc$MonthA,levels=month.name)
 ```{r,fig.height=10}
 #plot all but phi and state
 ggplot(pc[!pc$parameter %in% c("phi","state"),],aes(x=Draw,y=value)) + facet_wrap(~par,scales="free",ncol=3) + geom_line(aes(col=as.factor(chain))) + labs(col="Chain")
+
+a<-pc %>% filter(parameter %in% c("state","phi")) %>% filter((parameter == "phi"&Behavior==2)|parameter =="state") %>% dplyr::select(Draw,chain,Animal,Track,step,value,parameter) %>% spread(key=parameter,value=value)
+ggplot(a,aes(x=phi,fill=as.factor(state-1))) + geom_density(alpha=0.7) + labs(fill="Behavior")
 ```
 
 
@@ -444,23 +449,24 @@ simdf<-pc %>% filter(parameter %in% c("gamma","alpha_mu")) %>% group_by(MonthA,B
 
 #Behavioral Prediction
 
-
 ```{r}
 #mean transition probability
-mean_phi<-pc %>% filter(parameter=="phi",Behavior==2) %>% mutate(step=as.numeric(as.character(step))) %>% group_by(Animal,Track,step) %>% summarize(phi=mean(value)) %>% arrange(Animal,Track,step)
+mean_phi<-pc %>% filter(parameter=="phi",Behavior==2) %>% mutate(step=as.numeric(as.character(step))) %>% group_by(Animal,Track,step) %>% summarize(phi=median(value)) %>% arrange(Animal,Track,step)
 
 #mode state for each position
 mode_state<-pc %>% filter(parameter %in% "state") %>% mutate(bstate=ifelse(value==1,"Traveling","Area-restricted Search")) %>% group_by(Animal,Track,step,bstate) %>% summarize(n=n()) %>% spread(key=bstate,value=n,fill=0)%>% mutate(ratio=`Area-restricted Search`/Traveling) %>% mutate(state=as.character(ifelse(ratio>=1,"Area-restricted Search","Traveling")))
 
 mxy<-merge(mxy,mean_phi,by=c("step","Track","Animal"))
-
 mxy<-merge(mxy,mode_state,by=c("step","Track","Animal"))
-
-#ensure order for plotting
-mxy<-mxy %>% arrange(Animal,Track,step,jStep)
 
 #make factor
 mxy$bstate<-factor(mxy$state)
+
+#make phi a factor
+mxy$phistate<-cut(mxy$phi,c(0,0.5,1),labels=c("Traveling","Area-restricted Search"))
+
+#ensure order for plotting
+mxy<-mxy %>% arrange(Animal,Track,step,jStep)
 ```
 
 ```{r}
@@ -468,17 +474,26 @@ m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",colo
 ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5,alpha=0.7)   + mytheme
 ```
 
-## Confidence
+##Spatial Prediction
+
 ```{r}
-ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=Animal),size=.5)   + mytheme +scale_color_continuous(low='blue',high='red')
+m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color="bw")
+
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.2)  + geom_path(data=fccamlr,aes(x=long,y=lat,group=id),col="black",size=1) + mytheme + labs(col="Behavior")
+
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)),size=.2) + geom_path(data=fccamlr,aes(x=long,y=lat,group=id),col="black",size=1)
+ggsave("Figures/SpatialPred.jpg",height=5,width=5)
+
+#Black and white version
+ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)),size=0.8) + geom_path(data=fccamlr,aes(x=long,y=lat,group=Unit),size=0.3,col="black")  + borders(fill=NA,alpha=0.9) + coord_cartesian(ylim = c(-69,-60),xlim=c(-53,-72)) + theme_bw() + mytheme + scale_fill_manual(values=rep("NA",8)) + labs(col="Behavior") + scale_color_manual(values=c("grey10","grey60"))
+ggsave("Figures/SpatialPred_BW.jpg",height=5,width=7)
+
 ```
 
 ## By individual
 
 ```{r,fig.height=12}
 ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.5)   + mytheme + facet_wrap(~Animal,scales="free")
-
-ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=ratio,group=paste(Animal,Track)),size=.5) + facet_wrap(~Animal,scales="free") + mytheme +scale_color_continuous(low='blue',high='red')
 ```
 
 ##Autocorrelation in behavior
@@ -604,6 +619,17 @@ feedr<-runs %>% group_by(Draw,chain,Animal) %>% do(endtrack(.)) %>% filter(Behav
 
 #save runs to file
 #write.csv(feedr,"OutData/Runs.csv")
+```
+
+#Proportion of states by month
+
+```{r}
+prop<-pc %>% filter(parameter=="state") %>% group_by(MonthA,Draw,chain,value) %>% summarize(s=n()) 
+ratio<-pc %>% filter(parameter=="state") %>% group_by(MonthA,Draw,chain,value) %>% summarize(s=n()) %>% spread(key=value,value=s) %>% mutate(b=`2`/(`1`+`2`)) 
+
+ggplot(prop,aes(x=as.factor(value),y=s,fill=MonthA)) + geom_violin() + labs(x="Behavior",y="Hours",fill="Month") + scale_x_discrete(label=c("Traveling","Area-restricted Search"))
+
+ggplot(ratio,aes(x=b,fill=MonthA)) + geom_density(alpha=0.8) + labs(x="Percentage of time in Area-restricted Search state",fill="Month") + theme_bw()
 ```
 
 #Time spent in grid cell
