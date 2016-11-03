@@ -479,13 +479,13 @@ ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),
 ```{r,fig.width=9}
 m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color="bw")
 
-ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.2) + mytheme + labs(col="Behavior")
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.2) + mytheme + labs(col="Behavior") +  facet_wrap(~Month,nrow=2)
 
-ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)),size=.2) +
+ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)),size=.2)  + facet_wrap(~Month,nrow=2)
 ggsave("Figures/SpatialPred.jpg",height=5,width=5)
 
 #Black and white version
-ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)),size=0.8)  + borders(fill=NA,alpha=0.9) + coord_cartesian(ylim = c(-69,-60),xlim=c(-53,-72)) + theme_bw() + mytheme + scale_fill_manual(values=rep("NA",8)) + labs(col="Behavior") + scale_color_manual(values=c("grey10","grey60"))
+ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)),size=0.8)  + borders(fill=NA,alpha=0.9) + coord_cartesian(ylim = c(-69,-60),xlim=c(-53,-72)) + theme_bw() + mytheme + scale_fill_manual(values=rep("NA",8)) + labs(col="Behavior") + scale_color_manual(values=c("grey10","grey60"))  + facet_wrap(~Month,nrow=2)
 ggsave("Figures/SpatialPred_BW.jpg",height=5,width=7)
 
 ```
