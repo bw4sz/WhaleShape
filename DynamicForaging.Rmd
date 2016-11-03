@@ -80,7 +80,7 @@ mxy$Month<-months(mxy$timestamp)
 mxy$Year<-years(mxy$timestamp)
 
 #Only austral sping and summer
-mxy<-mxy[mxy$Month %in% month.name[1:6],]
+mxy<-mxy[mxy$Month %in% month.name[1:5],]
 
 #remove empty timestamps
 mxy<-mxy[!is.na(mxy$timestamp),]
@@ -180,7 +180,7 @@ timed<-function(d,step_length){
   }
   
   #remove tracks that are shorter than three days
-  track_time<-d %>% group_by(Track) %>% summarize(mt=difftime(max(as.POSIXct(timestamp)),min(as.POSIXct(timestamp)),units="hours")) %>% filter(mt>=18) %>% .$Track
+  track_time<-d %>% group_by(Track) %>% summarize(mt=difftime(max(as.POSIXct(timestamp)),min(as.POSIXct(timestamp)),units="hours")) %>% filter(mt>=16) %>% .$Track
   
   d<-d[d$Track %in% track_time,]
   
@@ -300,7 +300,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=5000,n.burnin=4500,n.thin=5,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10000,n.burnin=9000,n.thin=5,DIC=FALSE))
 }
 
 ```

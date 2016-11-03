@@ -1,0 +1,135 @@
+---
+title: "The location, characteristics, and composition of temporal movement"
+author: "Ben Weinstein"
+date: "November 3, 2016"
+output: 
+  html_document:
+    keep_md: yes
+    number_sections: yes
+    theme: spacelab
+    toc: yes
+---
+
+```{r,warning=FALSE,message=FALSE,echo=FALSE}
+library(knitr)
+opts_chunk$set(echo=F,warning=F,message=F,fig.width = 12,fig.height = 5,cache=F)
+library(boot)
+library(raster)
+library(tidyr)
+library(ggplot2)
+library(MASS)
+library(ggmap)
+library(dplyr)
+library(chron)
+library(gridExtra)
+library(stringr)
+library(R2jags)
+library(maptools)
+library(reshape2)
+
+##ggplot theme
+mytheme<-theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),panel.grid=element_blank())
+```
+
+#Changes in movement location
+
+# Changes in movement characteristics
+
+## Increasing autocorrelation in traveling over time. 
+
+```{r,fig.height=5,fig.width=14}
+source("Sim.R")
+
+gt<-data.frame(Month=month.name[1:6],Gamma=c(seq(0,1.25,0.25),rep(0.2,6)),Alpha_mu=c(rep(2,6),rep(-1,6)),State=c(rep(1,6),rep(2,6)))
+gt<-melt(gt,measure.vars = c("Gamma","Alpha_mu"))
+gt<-spread(gt,key=State,value=value)
+colnames(gt)[2]<-"parameter"
+gt<-split(gt,gt$Month)
+
+#monthly trajectories
+mt<-lapply(gt,function(k){
+  
+  mxy<-list()
+
+  #individuals
+  ind<-1
+  
+  #Total time length for each individual track
+  step.ind<-rep(100,4)
+  
+  #time for each step
+  step_length=3
+
+  for(x in 1:ind){
+    
+    #autocorrelation is the second row
+    #transition is first row, needs to be logit transformed.
+      mxy[[x]]<-traj(gamma=as.numeric(k[1,3:4]),theta=c(0,0),a1=inv.logit(as.numeric(k[2,3:4])),total_time = step.ind[x],step_length=step_length)
+  } 
+  return(mxy)
+})
+
+mt<-melt(mt,id.vars=colnames(mt[[1]][[1]]))
+
+#Label Individual and month
+colnames(mt)[colnames(mt) %in% 'L1']<-"Month"
+colnames(mt)[colnames(mt) %in% 'L2']<-"Animal"
+
+mt$Month<-factor(mt$Month,levels=month.name)
+
+ggplot(data=mt,aes(x=x,y=y))+ theme_bw()  + geom_path(aes(col=State,group=Animal),size=1)+ facet_wrap(~Month,nrow=1,scales="free")  + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="") + scale_color_manual(values=c("gray","black"))
+
+prop<-mt %>% group_by(State,Month) %>% summarize(s=n()) %>% filter(!is.na(State)) %>% spread(key=State,value=s) %>% mutate(b=Feeding/(Feeding+Traveling))
+ggplot(prop)+geom_point(aes(x=Month,y=b)) + labs(y="Proportion of time foraging") + ylim(0,1) + theme_bw()
+```
+
+## Increasing foraging allocation over time
+
+```{r,fig.height=5,fig.width=14}
+gt<-data.frame(Month=month.name[1:6],Gamma=c(rep(0.6,6),rep(0.05,6)),Alpha_mu=c(rep(2,6),seq(2,-3,-1)),State=c(rep(1,6),rep(2,6)))
+gt<-melt(gt,measure.vars = c("Gamma","Alpha_mu"))
+gt<-spread(gt,key=State,value=value)
+colnames(gt)[2]<-"parameter"
+gt<-split(gt,gt$Month)
+
+#monthly trajectories
+mt<-lapply(gt,function(k){
+  
+  mxy<-list()
+
+  #individuals
+  ind<-1
+  
+  #Total time length for each individual track
+  step.ind<-rep(100,4)
+  
+  #time for each step
+  step_length=1
+
+  for(x in 1:ind){
+    
+    #autocorrelation is the second row
+    #transition is first row, needs to be logit transformed.
+      mxy[[x]]<-traj(gamma=as.numeric(k[1,3:4]),theta=c(0,0),a1=inv.logit(as.numeric(k[2,3:4])),total_time = step.ind[x],step_length=step_length)
+  } 
+  return(mxy)
+})
+
+mt<-melt(mt,id.vars=colnames(mt[[1]][[1]]))
+
+#Label Individual and month
+colnames(mt)[colnames(mt) %in% 'L1']<-"Month"
+colnames(mt)[colnames(mt) %in% 'L2']<-"Animal"
+
+mt$Month<-factor(mt$Month,levels=month.name)
+
+ggplot(data=mt,aes(x=x,y=y))+ theme_bw()  + geom_path(aes(col=State,group=Animal),size=1)+ facet_wrap(~Month,scales='free',nrow=1)  + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="") + scale_color_manual(values=c("gray","black"))
+
+prop<-mt %>% group_by(State,Month) %>% summarize(s=n()) %>% filter(!is.na(State)) %>% spread(key=State,value=s) %>% mutate(b=Feeding/(Feeding+Traveling))
+ggplot(prop)+geom_point(aes(x=Month,y=b)) + labs(y="Proportion of time foraging") + ylim(0,1) + theme_bw()
+
+```
+
+#change in movement location
+
+```{r}
