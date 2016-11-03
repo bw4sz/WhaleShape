@@ -56,7 +56,7 @@ minke<-c("131117","131118","131120","154184")
 mxy<-mxy[!mxy$individual.local.identifier %in% minke,]
 
 #grab set of animals
-mxy<-mxy[mxy$Animal %in% c("131143","131142"),]
+#mxy<-mxy[mxy$Animal %in% c("131143","131142"),]
 
 #empty coordinates
 mxy<-mxy[!is.na(mxy$x),]
@@ -300,7 +300,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=10,n.burnin=0,n.thin=1,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=5000,n.burnin=4500,n.thin=5,DIC=FALSE))
 }
 
 ```
@@ -476,7 +476,7 @@ ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),
 
 ##Spatial Prediction
 
-```{r}
+```{r,fig.width=9}
 m <- get_map(location=pp,source="google",zoom=5,scale=2,maptype="satellite",color="bw")
 
 ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=.2) + mytheme + labs(col="Behavior")
@@ -502,7 +502,6 @@ ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),
 #create proper time stamp
 ggplot(data=mxy,aes(x=as.POSIXct(timestamp),y=as.factor(state))) + geom_line(aes(group=Track),size=1)+ theme_bw()  + facet_wrap(~individual.local.identifier,ncol=2,scales="free") + labs(x="Time",y="Behavior") 
 ```
-
 
 #Simulated tracks
 
@@ -629,7 +628,7 @@ ratio<-pc %>% filter(parameter=="state") %>% group_by(MonthA,Draw,chain,value) %
 
 ggplot(prop,aes(x=as.factor(value),y=s,fill=MonthA)) + geom_violin() + labs(x="Behavior",y="Hours",fill="Month") + scale_x_discrete(label=c("Traveling","Area-restricted Search"))
 
-ggplot(ratio,aes(x=b,fill=MonthA)) + geom_density(alpha=0.8) + labs(x="Percentage of time in Area-restricted Search state",fill="Month") + theme_bw()
+ggplot(ratio,aes(x=b,fill=MonthA)) + geom_density(alpha=0.8) + labs(x="Percentage of time in Area-restricted Search state",fill="Month") + theme_bw()  + scale_fill_brewer(palette="RdBu")
 ```
 
 #Time spent in grid cell

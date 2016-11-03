@@ -347,3 +347,51 @@ Switched to a new branch 'i-bdc60ae2'
 To git@github.com:bw4sz/WhaleShape.git
  * [new branch]      i-bdc60ae2 -> i-bdc60ae2Branch i-bdc60ae2 set up to track remote branch i-bdc60ae2 from origin.
 
+Warning: Permanently added 'ec2-35-162-254-19.us-west-2.compute.amazonaws.com,35.162.254.19' (ECDSA) to the list of known hosts.
+Cloning into 'WhaleShape'...
+Switched to a new branch 'i-b0c00cef'
+[i-b0c00cef 0ebb499] ec2 run complete
+ 44 files changed, 176 insertions(+), 188 deletions(-)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-10-1.png (96%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-11-1.png (91%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-11-2.png (95%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-16-1.png (97%)
+ create mode 100644 DynamicForaging_files/figure-html/unnamed-chunk-16-2.png
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-18-1.png (97%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-19-1.png (98%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-19-2.png (93%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-20-1.png (99%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-20-2.png (95%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-21-1.png (96%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-23-1.png (96%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-24-1.png (97%)
+ create mode 100644 DynamicForaging_files/figure-html/unnamed-chunk-24-2.png
+ create mode 100644 DynamicForaging_files/figure-html/unnamed-chunk-24-3.png
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-25-1.png (98%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-26-1.png (98%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-27-1.png (97%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-29-1.png (89%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-30-1.png (99%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-30-2.png (95%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-32-1.png (99%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-32-2.png (98%)
+ create mode 100644 DynamicForaging_files/figure-html/unnamed-chunk-33-1.png
+ create mode 100644 DynamicForaging_files/figure-html/unnamed-chunk-33-2.png
+ create mode 100644 DynamicForaging_files/figure-html/unnamed-chunk-33-3.png
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-4-1.png (96%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-5-1.png (90%)
+ create mode 100644 DynamicForaging_files/figure-html/unnamed-chunk-5-2.png
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-7-1.png (91%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-9-1.png (96%)
+ rewrite Figures/Alphaplot.jpeg (93%)
+ rewrite Figures/Duration.jpeg (93%)
+ rewrite Figures/Gammaplot.jpeg (94%)
+ rewrite Figures/MonthTracks_BW.jpeg (91%)
+ rewrite Figures/RawTracks.jpg (88%)
+ rewrite Figures/ResidencyMap.jpg (90%)
+ rewrite Figures/SimulatedTracks.jpg (95%)
+ rewrite Figures/SpatialPred.jpg (87%)
+ rewrite Figures/SpatialPred_BW.jpg (87%)
+To git@github.com:bw4sz/WhaleShape.git
+ * [new branch]      i-b0c00cef -> i-b0c00cef
+Branch i-b0c00cef set up to track remote branch i-b0c00cef from origin.
