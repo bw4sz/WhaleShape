@@ -402,3 +402,8 @@ Connection reset by 35.160.198.133
 Warning: Permanently added 'ec2-35-162-45-179.us-west-2.compute.amazonaws.com,35.162.45.179' (ECDSA) to the list of known hosts.
 Cloning into 'WhaleShape'...
 Switched to a new branch 'i-9c468ac3'
+Connection to ec2-35-162-45-179.us-west-2.compute.amazonaws.com closed by remote host.
+Warning: Permanently added 'ec2-35-162-234-90.us-west-2.compute.amazonaws.com,35.162.234.90' (ECDSA) to the list of known hosts.
+Cloning into 'WhaleShape'...
+Switched to a new branch 'i-bd408ce2'
+Connection reset by 35.162.234.90
