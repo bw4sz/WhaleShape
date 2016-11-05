@@ -485,8 +485,9 @@ ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)
 ggsave("Figures/SpatialPred.jpg",height=5,width=5)
 
 #Black and white version
-ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)),size=0.8)  + borders(fill=NA,alpha=0.9) + coord_cartesian(ylim = c(-69,-60),xlim=c(-53,-72)) + theme_bw() + mytheme + scale_fill_manual(values=rep("NA",8)) + labs(col="Behavior") + scale_color_manual(values=c("grey10","grey60"))  + facet_wrap(~Month,nrow=2)
-ggsave("Figures/SpatialPred_BW.jpg",height=5,width=7)
+ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=0.8)  + borders(fill=NA,alpha=0.9) + coord_cartesian(ylim = c(-69,-60),xlim=c(-53,-72)) + theme_bw() + mytheme + scale_fill_manual(values=rep("NA",8)) + labs(col="Behavior") + scale_color_manual(values=c("grey10","grey60"))  + facet_wrap(~Month,nrow=2)
+ggsave("Figures/SpatialPred_BW.jpg",height=4,width=10,nrow=1)
+
 
 ```
 

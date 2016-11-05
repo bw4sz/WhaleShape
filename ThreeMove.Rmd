@@ -78,7 +78,7 @@ colnames(mt)[colnames(mt) %in% 'L2']<-"Animal"
 mt$Month<-factor(mt$Month,levels=month.name)
 
 ggplot(data=mt,aes(x=x,y=y))+ theme_bw()  + geom_path(aes(col=State,group=Animal),size=1)+ facet_wrap(~Month,nrow=1,scales="free")  + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="") + scale_color_manual(values=c("gray","black"))
-
+ggsave("Figures/GammaChange.jpeg",height=3,width=15)
 prop<-mt %>% group_by(State,Month) %>% summarize(s=n()) %>% filter(!is.na(State)) %>% spread(key=State,value=s) %>% mutate(b=Feeding/(Feeding+Traveling))
 ggplot(prop)+geom_point(aes(x=Month,y=b)) + labs(y="Proportion of time foraging") + ylim(0,1) + theme_bw()
 ```
@@ -124,8 +124,10 @@ colnames(mt)[colnames(mt) %in% 'L2']<-"Animal"
 mt$Month<-factor(mt$Month,levels=month.name)
 
 ggplot(data=mt,aes(x=x,y=y))+ theme_bw()  + geom_path(aes(col=State,group=Animal),size=1)+ facet_wrap(~Month,scales='free',nrow=1)  + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="") + scale_color_manual(values=c("gray","black"))
+ggsave("Figures/AlphaChange.jpeg",height=3,width=15)
 
 prop<-mt %>% group_by(State,Month) %>% summarize(s=n()) %>% filter(!is.na(State)) %>% spread(key=State,value=s) %>% mutate(b=Feeding/(Feeding+Traveling))
+
 ggplot(prop)+geom_point(aes(x=Month,y=b)) + labs(y="Proportion of time foraging") + ylim(0,1) + theme_bw()
 
 ```
