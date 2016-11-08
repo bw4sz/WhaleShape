@@ -412,13 +412,8 @@ g<-pc[pc$parameter %in% c("gamma"),] %>% mutate(bstate=ifelse(Behavior==1,"Trave
 ggplot(data=g,aes(x=value,fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Degree of movement autocorrelation") + scale_fill_brewer(palette="RdBu")
 
 ggsave("Figures/Gammaplot.jpeg",height=3,width=6,dpi=300)
-ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxplot() + theme_bw()  + ggtitle("Estimated parameters") + facet_wrap(~Behavior,scales="free")
-
-ggplot(data=pc[pc$parameter %in% c("gamma"),],aes(y=value,x=MonthA)) + geom_boxplot() + theme_bw()  + ggtitle("Movement autocorrelation") + facet_wrap(~Behavior,scales="free") + labs(x="Month")
 
 a<-pc[pc$parameter %in% c("gamma"),] %>% mutate(bstate=ifelse(Behavior==1,"Traveling ","Foraging"))
-ggplot(data=a,aes(y=value,x=MonthA)) + geom_boxplot() + theme_bw()  + ggtitle("Movement autocorrelation") + facet_wrap(~bstate,scales="free") + labs(x="Month")
-
 
 ggplot(data=a,aes(y=value,x=MonthA)) + geom_boxplot() + theme_bw()  + ggtitle("Movement autocorrelation") + labs(x="Month",fill="Behavior") + facet_wrap(~bstate,scales="free")
 ggsave("Figures/gammabox.jpeg",height=3,width=8)
@@ -432,9 +427,7 @@ a<-pc[pc$parameter %in% c("alpha_mu"),] %>% mutate(bstate=ifelse(Behavior==1,"Re
 ggplot(data=a,aes(x=inv.logit(value),fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Transition Probability") + scale_fill_brewer(palette="RdBu")
 ggsave("Figures/Alphaplot.jpeg",height=4,width=6,dpi=300)
 
-ggplot(data=a,aes(y=inv.logit(value),x=MonthA)) + geom_boxplot() + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(x="Month",y="Transition Probability") + scale_fill_brewer(palette="RdBu")
-
-ggplot(a,aes(x=MonthA,y=value)) + geom_boxplot() + facet_wrap(~bstate,scale="free") + theme_bw() + labs(x="Month",y="estimate") + ggtitle("Transitions among behaviors")
+ggplot(data=a,aes(y=inv.logit(value),x=MonthA)) + geom_boxplot() + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(x="Month",y="Transition Probability")
 ggsave("Figures/AlphaBox.jpeg",height=3,width=8)
 ```
 
