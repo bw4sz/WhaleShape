@@ -96,7 +96,7 @@ cat("
     alpha_mu[1,m] ~ dnorm(0,0.386)
     alpha_mu[2,m] ~ dnorm(0,0.386)
     
-    gamma[1,m] ~ dbeta(5, 2)		## gamma for state 1
+    gamma[1,m] ~ dunif(0.6,1)		## gamma for state 1
     dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
     gamma[2,m] <- gamma[1,m] * dev[m]	## gamma for state 2
     }
