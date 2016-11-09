@@ -86,12 +86,12 @@ cat("
     pi <- 3.141592653589
     
     ##argos observation error##
-    argos_prec[1:2,1:2] <- inverse(argos_sigma*argos_cov[,])
+    argos_prec[1:2,1:2] <- argos_cov[,]
     
     #Constructing the covariance matrix
-    argos_cov[1,1] <- 1
-    argos_cov[1,2] <- sqrt(argos_alpha) * rho
-    argos_cov[2,1] <- sqrt(argos_alpha) * rho
+    argos_cov[1,1] <- argos_sigma
+    argos_cov[1,2] <- 0
+    argos_cov[2,1] <- 0
     argos_cov[2,2] <- argos_alpha
     
     for(i in 1:ind){
@@ -181,7 +181,6 @@ cat("
     gamma[2,m] <- gamma[1,m] * dev[m]	## gamma for state 2
     }
     
-    
     ##Behavioral States
     
     #Hierarchical structure across motnhs
@@ -195,14 +194,11 @@ cat("
     lambda[2] <- 1 - lambda[1]
     
     ##Argos priors##
-    #longitudinal argos error
-    argos_sigma ~ dunif(0,10)
+    #longitudinal argos precision
+    argos_sigma <- 5
     
-    #latitidunal argos error
-    argos_alpha~dunif(0,10)
-    
-    #correlation in argos error
-    rho ~ dunif(-1, 1)
+    #latitidunal argos precision
+    argos_alpha <- 5
     
     
     }"
@@ -211,8 +207,8 @@ sink()
 
 
 ```
-##      user    system   elapsed 
-##    54.692     1.188 53903.012
+##     user   system  elapsed 
+##  259.762    2.861 2504.464
 ```
 
 
@@ -221,14 +217,14 @@ sink()
 
 ```
 ##             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells   1408464   75.3    3886542  207.6   3886542  207.6
-## Vcells 131781729 1005.5  292182880 2229.2 256241409 1955.0
+## Ncells   1479966   79.1    3886542  207.6   3886542  207.6
+## Vcells 329409356 2513.2  678527178 5176.8 571727655 4362.0
 ```
 
 ```
 ##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  1342840  71.8    3886542  207.6   3886542  207.6
-## Vcells 31030659 236.8  233746304 1783.4 256241409 1955.0
+## Ncells  1334751  71.3    3886542  207.6   3886542  207.6
+## Vcells 39305245 299.9  542821742 4141.5 571727655 4362.0
 ```
 
 
@@ -241,38 +237,38 @@ sink()
 
 ## Change in autocorrelation over time
 
-![](DynamicForaging_files/figure-html/unnamed-chunk-19-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-19-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-19-3.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-19-4.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-19-5.png)<!-- -->
+![](DynamicForaging_files/figure-html/unnamed-chunk-19-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-19-2.png)<!-- -->
 
 # Change in transition probabilities over time
 
-![](DynamicForaging_files/figure-html/unnamed-chunk-20-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-20-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-20-3.png)<!-- -->
+![](DynamicForaging_files/figure-html/unnamed-chunk-20-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-20-2.png)<!-- -->
 
 ## Parameter Summary
 
 ```
-##    parameter           par        mean        lower       upper
-## 1   alpha_mu alpha_mu[1,1]  0.71876568  0.261862961  1.18750428
-## 2   alpha_mu alpha_mu[2,1] -1.21664953 -1.955612054 -0.45690212
-## 3   alpha_mu alpha_mu[1,2]  0.96324530  0.494727501  1.51343499
-## 4   alpha_mu alpha_mu[2,2] -1.65963317 -2.401226160 -0.97722720
-## 5   alpha_mu alpha_mu[1,3]  0.76549196 -0.128208438  1.72983585
-## 6   alpha_mu alpha_mu[2,3] -2.50473766 -3.917175509 -1.14985992
-## 7   alpha_mu alpha_mu[1,4]  1.18983457  0.365955601  2.05147015
-## 8   alpha_mu alpha_mu[2,4] -1.43015035 -2.930525704  0.15032432
-## 9   alpha_mu alpha_mu[1,5]  1.10638684  0.479289550  1.78959798
-## 10  alpha_mu alpha_mu[2,5] -2.28850950 -3.130176094 -1.45433237
-## 11     gamma    gamma[1,1]  0.89562974  0.837063156  0.95681958
-## 12     gamma    gamma[2,1]  0.03140991  0.002181658  0.07883404
-## 13     gamma    gamma[1,2]  0.81439378  0.746590922  0.88292184
-## 14     gamma    gamma[2,2]  0.01834292  0.001033655  0.05423966
-## 15     gamma    gamma[1,3]  0.61584725  0.439611692  0.78272550
-## 16     gamma    gamma[2,3]  0.05715179  0.004035669  0.14701710
-## 17     gamma    gamma[1,4]  0.77219300  0.657645008  0.88841314
-## 18     gamma    gamma[2,4]  0.11785666  0.008206835  0.28630400
-## 19     gamma    gamma[1,5]  0.89841592  0.817447319  0.96687707
-## 20     gamma    gamma[2,5]  0.04946077  0.003161343  0.12502413
-## 21     theta      theta[1]  0.01482561 -0.008081086  0.03967628
-## 22     theta      theta[2]  3.23120298  2.520040568  3.88407348
+##    parameter           par        mean       lower       upper
+## 1   alpha_mu alpha_mu[1,1]  0.05244483 -0.87698268  0.91079589
+## 2   alpha_mu alpha_mu[2,1]  0.13425336 -1.20308276  1.79687303
+## 3   alpha_mu alpha_mu[1,2]  2.04713596  1.18991569  2.98041805
+## 4   alpha_mu alpha_mu[2,2]  1.70096767  0.30310682  3.41615282
+## 5   alpha_mu alpha_mu[1,3]  0.87758165 -0.21591421  2.30734669
+## 6   alpha_mu alpha_mu[2,3] -1.52116907 -2.98211492  0.12036004
+## 7   alpha_mu alpha_mu[1,4]  1.15184306 -0.53885152  3.02112648
+## 8   alpha_mu alpha_mu[2,4]  1.09870623 -1.01483909  3.10890739
+## 9   alpha_mu alpha_mu[1,5]  0.86718284 -0.56149620  2.62692010
+## 10  alpha_mu alpha_mu[2,5] -1.64840759 -2.94110442 -0.19993212
+## 11     gamma    gamma[1,1]  0.90402614  0.82341423  0.97218650
+## 12     gamma    gamma[2,1]  0.15394432  0.05032601  0.26170724
+## 13     gamma    gamma[1,2]  0.52644064  0.47099614  0.57873525
+## 14     gamma    gamma[2,2]  0.47422741  0.38936082  0.54341424
+## 15     gamma    gamma[1,3]  0.72711829  0.53882722  0.91094385
+## 16     gamma    gamma[2,3]  0.08430539  0.01075355  0.17724617
+## 17     gamma    gamma[1,4]  0.51942386  0.39937764  0.67228967
+## 18     gamma    gamma[2,4]  0.30823230  0.13279036  0.47528300
+## 19     gamma    gamma[1,5]  0.94513628  0.87315601  0.98955002
+## 20     gamma    gamma[2,5]  0.15557585  0.02899954  0.31536996
+## 21     theta      theta[1] -0.03196957 -0.07654599  0.00893915
+## 22     theta      theta[2]  1.07752779  0.70962464  1.44391963
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
