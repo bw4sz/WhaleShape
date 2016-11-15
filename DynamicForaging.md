@@ -65,17 +65,13 @@ Specify a duration, calculate the number of tracks and the number of removed poi
 
 
 
-
 How did the filter change the extent of tracks?
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
-
 ![](DynamicForaging_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
-
 ![](DynamicForaging_files/figure-html/unnamed-chunk-11-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-11-2.png)<!-- -->
-
 
 
 sink("Bayesian/Multi_RW.jags")
@@ -206,30 +202,13 @@ cat("
 sink()
 
 
-```
-##      user    system   elapsed 
-##  2813.207     8.116 33214.693
-```
 
 
 
 ##Chains
 
-```
-##             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells   1730662   92.5    3886542  207.6   3886542  207.6
-## Vcells 444881700 3394.2  916911296 6995.5 773039495 5897.9
-```
-
-```
-##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  1345588  71.9    3886542  207.6   3886542  207.6
-## Vcells 48691508 371.5  733529036 5596.4 773039495 5897.9
-```
-
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-16-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-16-2.png)<!-- -->
-
 
 
 
@@ -244,6 +223,7 @@ sink()
 ![](DynamicForaging_files/figure-html/unnamed-chunk-20-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-20-2.png)<!-- -->
 
 ## Parameter Summary
+
 
 ```
 ##    parameter           par        mean        lower       upper
@@ -301,7 +281,6 @@ sink()
 
 
 
-
 ![](DynamicForaging_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
 
 ## Duration by month
@@ -310,14 +289,20 @@ sink()
 
 
 
-
 #Proportion of states by month
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-32-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-32-2.png)<!-- -->
 
-#Time spent in grid cell
+#Time between bouts
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-33-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-33-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-33-3.png)<!-- -->
 
+#Distance between bouts
+
+![](DynamicForaging_files/figure-html/unnamed-chunk-34-1.png)<!-- -->
+
+#Time spent in grid cell
+
+![](DynamicForaging_files/figure-html/unnamed-chunk-35-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-35-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-35-3.png)<!-- -->
 
 
