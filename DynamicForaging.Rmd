@@ -27,14 +27,14 @@ library(R2jags)
 library(maptools)
 library(reshape2)
 #New model to be run, flag turned off if just updating.
-newModel<-F
+newModel<-T
 
 ##ggplot theme
 mytheme<-theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),panel.grid=element_blank())
 
 ```
 
-```{r,eval=T}
+```{r,eval=F}
 #Load in data
 load("DynamicForaging.RData")
 #jags$recompile()
@@ -579,7 +579,7 @@ mr<-runs %>% group_by(Behavior) %>% summarize(mean=mean(hours),lower=quantile(ho
 mr$bstate<-as.factor(mr$Behavior)
 levels(mr$bstate)=c("Traveling","Foraging")
 
-ggplot(mr,aes(col=bstate,y=mean,ymin=lower,ymax=upper,x=Month)) + geom_pointrange(size=1.5,position = position_jitter(width = .3)) + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours")
+ggplot(mr,aes(col=bstate,y=mean,ymin=lower,ymax=upper,x=Behavior)) + geom_pointrange(size=1.5,position = position_jitter(width = .3)) + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours")
 ggsave("Figures/Duration.jpeg",height=4,width=7)
 ```
 
