@@ -636,22 +636,6 @@ ggsave("Figures/Duration.jpeg",height=4,width=6,dpi=300)
 ggplot(runs,aes(x=Month,y=hours)) + geom_boxplot() + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours",col="Month",x="Behavior") + facet_wrap(~Behavior,scales="free")
 ```
 
-```{r}
-#Every run eventually ends in a switch (that's what makes it a run)
-runs$status<-1
-
-endtrack<-function(x){
-  x[nrow(x),"status"]<-0
-  return(x)
-}
-
-#if track ends, status is 0 not 1
-feedr<-runs %>% group_by(Draw,chain,Animal) %>% do(endtrack(.)) %>% filter(Behavior=="Foraging")
-
-#save runs to file
-#write.csv(feedr,"OutData/Runs.csv")
-```
-
 #Proportion of states by month
 
 ```{r}
