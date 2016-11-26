@@ -5,14 +5,19 @@ cat("
     #Constants
     pi <- 3.141592653589
     
+    #for each if 6 argos class observation error
+    
+    for(x in 1:6){
+    
     ##argos observation error##
-    argos_prec[1:2,1:2] <- argos_cov[,]
+    argos_prec[x,1:2,1:2] <- argos_cov[x,,]
     
     #Constructing the covariance matrix
-    argos_cov[1,1] <- argos_sigma
-    argos_cov[1,2] <- 0
-    argos_cov[2,1] <- 0
-    argos_cov[2,2] <- argos_alpha
+    argos_cov[x,1,1] <- argos_sigma[x]
+    argos_cov[x,1,2] <- 0
+    argos_cov[x,2,1] <- 0
+    argos_cov[x,2,2] <- argos_alpha[x]
+    }
     
     for(i in 1:ind){
     for(g in 1:tracks[i]){
@@ -114,11 +119,23 @@ cat("
     lambda[2] <- 1 - lambda[1]
     
     ##Argos priors##
-    #longitudinal argos precision
-    argos_sigma <- 5
+    #longitudinal argos precision, from Jonsen 2005, 2016, represented as precision not sd
     
-    #latitidunal argos precision
-    argos_alpha <- 5
+    #by argos class
+    argos_sigma[1] <- 11.9016
+    argos_sigma[2] <- 10.2775
+    argos_sigma[3] <- 1.228984
+    argos_sigma[4] <- 2.162593
+    argos_sigma[5] <- 3.885832
+    argos_sigma[6] <- 0.0565539
+    
+    #latitidunal argos precision, from Jonsen 2005, 2016
+    argos_alpha[1] <- 67.12537
+    argos_alpha[2] <- 14.73474
+    argos_alpha[3] <- 4.718973
+    argos_alpha[4] <- 0.3872023
+    argos_alpha[5] <- 3.836444
+    argos_alpha[6] <- 0.1081156
     
     
     }"

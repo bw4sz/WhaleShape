@@ -180,7 +180,7 @@ timed<-function(d,step_length){
   }
   
   #remove tracks that are shorter than three days
-  track_time<-d %>% group_by(Track) %>% summarize(mt=difftime(max(as.POSIXct(timestamp)),min(as.POSIXct(timestamp)),units="hours")) %>% filter(mt>=18) %>% .$Track
+  track_time<-d %>% group_by(Track) %>% summarize(mt=difftime(max(as.POSIXct(timestamp)),min(as.POSIXct(timestamp)),units="hours")) %>% filter(mt>=24) %>% .$Track
   
   d<-d[d$Track %in% track_time,]
   
@@ -296,7 +296,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=Mont
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=40000,n.burnin=39000,n.thin=5,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=50000,n.burnin=48000,n.thin=4,DIC=FALSE))
 }
 
 ```
@@ -581,41 +581,6 @@ levels(mr$bstate)=c("Traveling","Foraging")
 
 ggplot(mr,aes(col=bstate,y=mean,ymin=lower,ymax=upper,x=Behavior)) + geom_pointrange(size=1.5,position = position_jitter(width = .3)) + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours")
 ggsave("Figures/Duration.jpeg",height=4,width=7)
-```
-
-## Duration by month
-
-```{r}
-runs<-pc %>% filter(parameter=='state') %>% group_by(Animal,Track,Draw,chain,MonthA) %>% do(runf(.))
-
-#turn steps to hours
-runs$hours<-runs$runs*step_length
-
-#ignore single blips.
-mr<-runs %>% group_by(Behavior,MonthA) %>% filter(!runs %in% 1:2) %>% summarize(mean=mean(hours),lower=quantile(hours,0.05),upper=quantile(hours,0.95)) 
-mr$bstate<-as.factor(mr$Behavior)
-levels(mr$bstate)=c("Traveling","Foraging")
-
-ggplot(mr,aes(x=MonthA,y=mean,ymin=lower,ymax=upper)) + geom_pointrange(size=1.2,alpha=.7) + theme_bw() + labs(y="Duration of Behavior (Hours)",x="Month") + facet_wrap(~bstate,scales="free")
-ggsave("Figures/Duration.jpeg",height=4,width=6,dpi=300)
-
-ggplot(runs,aes(x=MonthA,y=hours)) + geom_boxplot() + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours",col="Month",x="Behavior") + facet_wrap(~Behavior,scales="free")
-```
-
-```{r}
-#Every run eventually ends in a switch (that's what makes it a run)
-runs$status<-1
-
-endtrack<-function(x){
-  x[nrow(x),"status"]<-0
-  return(x)
-}
-
-#if track ends, status is 0 not 1
-feedr<-runs %>% group_by(Draw,chain,Animal) %>% do(endtrack(.)) %>% filter(Behavior=="Foraging")
-
-#save runs to file
-#write.csv(feedr,"OutData/Runs.csv")
 ```
 
 ## Duration by month
