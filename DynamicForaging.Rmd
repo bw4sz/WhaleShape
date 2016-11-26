@@ -259,6 +259,11 @@ obs<-melt(mxy,measure.vars=c("x","y"))
 obs<-acast(obs,Animal~Track~step~jStep~variable)
 
 MonthIndex<-acast(mxy,Animal~Track~step,value.var="Month",fun=function(x) names(which.max(table(x))) )
+
+#argos error class array
+mxy$argos.lc<-factor(mxy$argos.lc,levels=c(3,2,1,0,"A","B"))
+mxy$numargos<-as.numeric(mxy$argos.lc)
+obs_class<-acast(mxy,Animal~Track~step~jStep,value.var="numargos")
 ```
 
 How did the filter change the extent of tracks?
@@ -290,7 +295,7 @@ source("Bayesian/MultiSpecies.R")
 
 #prior cov shape
 R <- diag(c(1,1))
-data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,Month=MonthA,Months=max(MonthA,na.rm=T))
+data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,argos_class=obs_class,Month=MonthA,Months=max(MonthA,na.rm=T))
 
 #paramters to track
 pt<-c("theta","gamma","phi","alpha_mu","state")

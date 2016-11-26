@@ -24,7 +24,7 @@ cat("
     
     ## Priors for first true location
     #for lat long
-    y[i,g,1,1:2] ~ dmnorm(argos[i,g,1,1,1:2],argos_prec)
+    y[i,g,1,1:2] ~ dmnorm(argos[i,g,1,1,1:2],argos_prec[1,1:2,1:2])
     
     #First movement - random walk.
     y[i,g,2,1:2] ~ dmnorm(y[i,g,1,1:2],iSigma)
@@ -70,7 +70,7 @@ cat("
     
     #for each lat and long
     #argos error
-    argos[i,g,t,u,1:2] ~ dmnorm(zhat[i,g,t,u,1:2],argos_prec)
+    argos[i,g,t,u,1:2] ~ dmnorm(zhat[i,g,t,u,1:2],argos_prec[argos_class[i,g,t,u],1:2,1:2])
     }
     }
     }
