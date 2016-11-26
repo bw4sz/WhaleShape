@@ -36,7 +36,7 @@ cat("
     for(t in 2:(steps[i,g]-1)){
     
     #Behavioral State at time T
-    logit(phi[i,g,t,1]) <- alpha_mu[state[i,g,t-1],Month[i,g,t]] 
+    phi[i,g,t,1] <- alpha_mu[state[i,g,t-1],Month[i,g,t]] 
     phi[i,g,t,2] <- 1-phi[i,g,t,1]
     state[i,g,t] ~ dcat(phi[i,g,t,])
     
@@ -55,7 +55,7 @@ cat("
     }
     
     #Final behavior state
-    logit(phi[i,g,steps[i,g],1]) <- alpha_mu[state[i,g,steps[i,g]-1],Month[i,g,steps[i,g]-1]] 
+    phi[i,g,steps[i,g],1] <- alpha_mu[state[i,g,steps[i,g]-1],Month[i,g,steps[i,g]-1]] 
     phi[i,g,steps[i,g],2] <- 1-phi[i,g,steps[i,g],1]
     state[i,g,steps[i,g]] ~ dcat(phi[i,g,steps[i,g],])
     
@@ -98,12 +98,12 @@ cat("
     for (m in 1:Months){
 
     #Intercepts
-    alpha_mu[1,m] ~ dnorm(0,0.386)
-    alpha_mu[2,m] ~ dnorm(0,0.386)
+    alpha_mu[1,m] ~ dbeta(1,1)
+    alpha_mu[2,m] ~ dbeta(1,1)
     
-    gamma[1,m] ~ dunif(0.6,1)		## gamma for state 1
+    gamma[1,m] ~ dbeta(3,2)		## gamma for state 1
     dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
-    gamma[2,m] <- gamma[1,m] * dev[m]	## gamma for state 2
+    gamma[2,m] <- gamma[1] * dev[m]
     }
     
     ##Behavioral States
