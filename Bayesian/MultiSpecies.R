@@ -97,13 +97,13 @@ cat("
     #for each month
     for (m in 1:Months){
 
-    #Intercepts
-    alpha_mu[1,m] ~ dbeta(1,1)
-    alpha_mu[2,m] ~ dbeta(1,1)
-    
-    gamma[1,m] ~ dbeta(3,2)		## gamma for state 1
-    dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
-    gamma[2,m] <- gamma[1] * dev[m]
+      #Intercepts
+      alpha_mu[1,m] ~ dbeta(1,1)
+      alpha_mu[2,m] ~ dbeta(1,1)
+      
+      gamma[1,m] ~ dbeta(3,2)		## gamma for state 1
+      dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
+      gamma[2,m] <- gamma[1] * dev[m]
     }
     
     ##Behavioral States
