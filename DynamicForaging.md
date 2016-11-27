@@ -112,7 +112,7 @@ cat("
     for(t in 2:(steps[i,g]-1)){
     
     #Behavioral State at time T
-    logit(phi[i,g,t,1]) <- alpha_mu[state[i,g,t-1],Month[i,g,t]] 
+    phi[i,g,t,1] <- alpha_mu[state[i,g,t-1],Month[i,g,t]] 
     phi[i,g,t,2] <- 1-phi[i,g,t,1]
     state[i,g,t] ~ dcat(phi[i,g,t,])
     
@@ -131,7 +131,7 @@ cat("
     }
     
     #Final behavior state
-    logit(phi[i,g,steps[i,g],1]) <- alpha_mu[state[i,g,steps[i,g]-1],Month[i,g,steps[i,g]-1]] 
+    phi[i,g,steps[i,g],1] <- alpha_mu[state[i,g,steps[i,g]-1],Month[i,g,steps[i,g]-1]] 
     phi[i,g,steps[i,g],2] <- 1-phi[i,g,steps[i,g],1]
     state[i,g,steps[i,g]] ~ dcat(phi[i,g,steps[i,g],])
     
@@ -173,13 +173,13 @@ cat("
     #for each month
     for (m in 1:Months){
 
-    #Intercepts
-    alpha_mu[1,m] ~ dnorm(0,0.386)
-    alpha_mu[2,m] ~ dnorm(0,0.386)
-    
-    gamma[1,m] ~ dunif(0.6,1)		## gamma for state 1
-    dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
-    gamma[2,m] <- gamma[1,m] * dev[m]	## gamma for state 2
+      #Intercepts
+      alpha_mu[1,m] ~ dbeta(1,1)
+      alpha_mu[2,m] ~ dbeta(1,1)
+      
+      gamma[1,m] ~ dbeta(3,2)		## gamma for state 1
+      dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
+      gamma[2,m] <- gamma[1,m] * dev[m]
     }
     
     ##Behavioral States
@@ -221,7 +221,7 @@ sink()
 
 ```
 ##      user    system   elapsed 
-##   343.358     3.584 33038.047
+##   337.529     3.925 20180.152
 ```
 
 
@@ -231,13 +231,13 @@ sink()
 ```
 ##             used   (Mb) gc trigger   (Mb)  max used   (Mb)
 ## Ncells   1512755   80.8    3886542  207.6   3886542  207.6
-## Vcells 397431035 3032.2  889956387 6789.9 765594135 5841.1
+## Vcells 397431022 3032.2  889956371 6789.9 765594122 5841.1
 ```
 
 ```
 ##            used (Mb) gc trigger   (Mb)  max used   (Mb)
 ## Ncells  1348159   72    3886542  207.6   3886542  207.6
-## Vcells 53212776  406  711965109 5431.9 765594135 5841.1
+## Vcells 53212769  406  711965096 5431.9 765594122 5841.1
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-16-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-16-2.png)<!-- -->
@@ -258,29 +258,29 @@ sink()
 
 
 ```
-##    parameter           par       mean       lower      upper
-## 1   alpha_mu alpha_mu[1,1]  2.3478796  1.49103170  3.1860180
-## 2   alpha_mu alpha_mu[2,1] -2.5732266 -3.34357970 -1.8701620
-## 3   alpha_mu alpha_mu[1,2]  2.5184411  2.02207777  2.9988844
-## 4   alpha_mu alpha_mu[2,2] -2.7407313 -3.16547860 -2.3159538
-## 5   alpha_mu alpha_mu[1,3]  2.7485979  1.90527038  3.5033641
-## 6   alpha_mu alpha_mu[2,3] -3.1024609 -3.77030779 -2.5111170
-## 7   alpha_mu alpha_mu[1,4]  2.1634001  1.22066193  3.1752907
-## 8   alpha_mu alpha_mu[2,4] -2.5104508 -3.42676321 -1.6923341
-## 9   alpha_mu alpha_mu[1,5]  2.7062488  1.69736137  3.7461721
-## 10  alpha_mu alpha_mu[2,5] -2.7024845 -3.71769957 -1.6740279
-## 11     gamma    gamma[1,1]  0.8793497  0.79203012  0.9775155
-## 12     gamma    gamma[2,1]  0.5632432  0.14596396  0.8483072
-## 13     gamma    gamma[1,2]  0.7692441  0.69535048  0.8509218
-## 14     gamma    gamma[2,2]  0.5105311  0.19852238  0.7381559
-## 15     gamma    gamma[1,3]  0.6911617  0.60750825  0.8116130
-## 16     gamma    gamma[2,3]  0.4602625  0.19512060  0.6455024
-## 17     gamma    gamma[1,4]  0.8381944  0.71248679  0.9749967
-## 18     gamma    gamma[2,4]  0.4895126  0.10297641  0.7780098
-## 19     gamma    gamma[1,5]  0.9152226  0.84402022  0.9860971
-## 20     gamma    gamma[2,5]  0.6785520  0.31828306  0.8957414
-## 21     theta      theta[1]  1.5004106 -0.00145625  3.0323655
-## 22     theta      theta[2]  1.6156789  0.04228479  3.3169656
+##    parameter           par       mean        lower      upper
+## 1   alpha_mu alpha_mu[1,1] 0.89148610  0.813379382 0.95230902
+## 2   alpha_mu alpha_mu[2,1] 0.06902732  0.022237257 0.13281403
+## 3   alpha_mu alpha_mu[1,2] 0.91440407  0.862918057 0.95194997
+## 4   alpha_mu alpha_mu[2,2] 0.05957062  0.033107096 0.09181736
+## 5   alpha_mu alpha_mu[1,3] 0.91812786  0.872321301 0.95895730
+## 6   alpha_mu alpha_mu[2,3] 0.04392333  0.024772197 0.06946068
+## 7   alpha_mu alpha_mu[1,4] 0.83839337  0.759733913 0.91154048
+## 8   alpha_mu alpha_mu[2,4] 0.05390102  0.021270315 0.09378220
+## 9   alpha_mu alpha_mu[1,5] 0.90725130  0.813048520 0.97383379
+## 10  alpha_mu alpha_mu[2,5] 0.04774076  0.017936362 0.09041703
+## 11     gamma    gamma[1,1] 0.90900254  0.849480495 0.96553885
+## 12     gamma    gamma[2,1] 0.30951748  0.066968554 0.56577281
+## 13     gamma    gamma[1,2] 0.81296929  0.762397193 0.86223269
+## 14     gamma    gamma[2,2] 0.29106393  0.145580908 0.42729593
+## 15     gamma    gamma[1,3] 0.73781533  0.669270371 0.80166946
+## 16     gamma    gamma[2,3] 0.32294601  0.177058514 0.45539260
+## 17     gamma    gamma[1,4] 0.89656972  0.825410683 0.96235689
+## 18     gamma    gamma[2,4] 0.26319044  0.099880736 0.43539423
+## 19     gamma    gamma[1,5] 0.92385911  0.859276131 0.97712937
+## 20     gamma    gamma[2,5] 0.48539302  0.231033788 0.71825827
+## 21     theta      theta[1] 0.01466695 -0.006516048 0.03604936
+## 22     theta      theta[2] 3.16031770  2.980462414 3.36305546
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
