@@ -557,61 +557,6 @@ ggsave("Figures/SimulatedTracks.jpg",dpi=300,height=4,width=7)
 
 ##Behavioral description
 
-## Predicted behavior duration
-
-```{r,fig.height=5,fig.width=14}
-
-#associate Month with state change
-runf<-function(x){
-  
-
-  #arrange by step
-  x$step<-as.numeric(x$step)
-  x<-x %>% arrange(step)
-  
-  #calculate run length
-  state_change<-rle(as.numeric(x$value))
-  runl<-data.frame(Animal=unique(x$Animal),runs=state_change$lengths,Behavior=state_change$values)
-  runl$Behavior<-as.factor(runl$Behavior)
-  levels(runl$Behavior)<-c("Traveling","Foraging")
-  
-  return(runl)
-}
-
-runs<-pc %>% filter(parameter=='state') %>% group_by(Animal,Track,Draw,chain) %>% do(runf(.))
-
-#turn steps to hours
-runs$hours<-runs$runs*step_length
-```
-
-```{r,fig.height=4}
-mr<-runs %>% group_by(Behavior) %>% summarize(mean=mean(hours),lower=quantile(hours,0.05),upper=quantile(hours,0.95))
-
-mr$bstate<-as.factor(mr$Behavior)
-levels(mr$bstate)=c("Traveling","Foraging")
-
-ggplot(mr,aes(col=bstate,y=mean,ymin=lower,ymax=upper,x=Behavior)) + geom_pointrange(size=1.5,position = position_jitter(width = .3)) + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours")
-ggsave("Figures/Duration.jpeg",height=4,width=7)
-```
-
-## Duration by month
-
-```{r}
-runs<-mxy %>% group_by(Animal,Track,Month) %>% mutate(value=phistate) %>% do(runf(.))
-
-#turn steps to hours
-runs$hours<-runs$runs*step_length
-
-mr<-runs %>% group_by(Behavior,Month) %>% summarize(mean=mean(hours),lower=quantile(hours,0.05),upper=quantile(hours,0.95)) 
-mr$bstate<-as.factor(mr$Behavior)
-levels(mr$bstate)=c("Traveling","Foraging")
-
-ggplot(mr,aes(x=Month,y=mean,ymin=lower,ymax=upper)) + geom_pointrange(size=1.2,alpha=.7) + theme_bw() + labs(y="Duration of Behavior (Hours)",x="Month") + facet_wrap(~bstate,scales="free")
-ggsave("Figures/Duration.jpeg",height=4,width=6,dpi=300)
-
-ggplot(runs,aes(x=Month,y=hours)) + geom_boxplot() + theme_bw() + ggtitle("Average Duration of Behavior") + labs(y="Hours",col="Month",x="Behavior") + facet_wrap(~Behavior,scales="free")
-```
-
 #Proportion of states by month
 
 ```{r}
@@ -622,42 +567,6 @@ ggplot(prop,aes(fill=as.factor(value),y=s,x=MonthA)) + geom_violin() + labs(x="M
 
 ggplot(ratio,aes(y=b,x=MonthA)) + geom_boxplot() + labs(y="Proportion Area-restricted Search",x="Month") + theme_bw()  + scale_fill_brewer(palette="RdBu") + scale_y_continuous(labels = scales::percent)
 ggsave("Figures/PropForaging.jpeg",height=3,width=5)
-```
-
-#Time between foraging bouts
-
-```{r}
-timebetween<-function(a){
-  
-  a<-a %>% arrange(step)
-  
-  a$timestamp<-as.POSIXct(a$timestamp,format="%Y-%m-%d %I:%M:%S %p")
-  
-  #run length encoding
-  ra<-rle(as.numeric(a$phistate))
-  
-  #create index matrix
-  rindex<-data.frame(Behavior=ra$values,Runs=ra$lengths,Index=cumsum(ra$lengths))
-  
-  if(nrow(rindex)<2){return(data.frame())}
-  for (x in 2:nrow(rindex)){
-    rindex[x,"Hours"]<-difftime(a[[rindex$Index[x],"timestamp"]],a[[rindex$Index[x-1],"timestamp"]],units="hours")
-  }
-
-  out<-rindex %>% filter(Behavior==2)
-  return(out) 
-  }
-
-#calculate time between
-tb<-mxy %>% group_by(Animal,Track,Month)  %>% do(timebetween(.)) %>% filter(!is.na(Hours))
-
-ggplot(tb,aes(x=Month,y=Hours)) + geom_boxplot() + theme_bw() + labs(x="Month",y="Time between foraging bouts (Hours)")
-
-ggplot(tb,aes(x=Hours,fill=Month)) + geom_density(alpha=0.4) + xlab("Time Between Foraging Bouts (Hours)") + theme_bw() + scale_fill_brewer(palette = "RdBu")
-
-mean_bout<-tb %>% group_by(Month) %>% summarize(m=median(Hours))
-ggplot(mean_bout,aes(x=Month,y=m)) + geom_boxplot() + theme_bw() + labs(x="Month",y="Average time between bouts")
-ggsave("Figures/TimeBetweenBouts.jpeg",height=4,width=6)
 ```
 
 #Distance between bouts
@@ -684,14 +593,14 @@ distbout<-function(a){
   
   #get runs
   stater<-rle(as.numeric(a$phistate))
-  Index<-c(1,cumsum(stater$lengths))
+  Index<-c(0,cumsum(stater$lengths))
   
   #if(length(Index)==2){return(data.frame(NULL))}
   
   #label bouts
   a$Bout<-NA
   for(x in 1:(length(Index)-1)){
-    a$Bout[Index[x]:Index[x+1]]<-x
+    a$Bout[(Index[x]+1):Index[x+1]]<-x
   }
   
   #we don't know what happens before or after a track.
@@ -727,18 +636,16 @@ avg_dist$Month<-factor(avg_dist$Month,levels=month.name)
 distf$Month<-factor(distf$Month,levels=month.name)
 
 ggplot(distf,aes(x=Month,y=km)) + geom_boxplot() + theme_bw()
-#ggplot(avg_dist,aes(x=Month,y=meankm)) + geom_pointrange(aes(y=meankm,ymin=lower,ymax=upper)) + theme_bw() + labs(y="Distance between ARS bouts")
+ggplot(avg_dist,aes(x=Month,y=meankm)) + geom_pointrange(aes(y=meankm,ymin=lower,ymax=upper)) + theme_bw() + labs(y="Distance between ARS bouts")
 ```
 
-
-#Time between bouts: Method II
+#Time between bouts
 
 ```{r,eval=F}
 #function for calculating points in a track
 tracktime<-function(a){
   return(data.frame(Days=difftime(max(a$timestamp),min(a$timestamp))))
 }
-
 
 #function for calculating geographic distance between foraging bouts
 timebout<-function(a){
@@ -747,19 +654,16 @@ timebout<-function(a){
   
   #get runs
   stater<-rle(as.numeric(a$phistate))
-  Index<-c(1,cumsum(stater$lengths))
+  Index<-c(0,cumsum(stater$lengths))
   
   #label bouts
   a$Bout<-NA
   for(x in 1:(length(Index)-1)){
-    a$Bout[Index[x]:Index[x+1]]<-x
+    a$Bout[(Index[x]+1):Index[x+1]]<-x
   }
   
   #we don't know what happens before or after a track.
   a<-a %>% filter(!Bout %in% c(min(Bout),max(Bout)))
-  
-  #only traveling bouts.
-  #a<-a %>% filter(phistate=="Traveling")
   
   #Remove bouts that are only a few point.
   keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>10)
@@ -779,9 +683,15 @@ timef<-mxy %>% group_by(Animal,Track) %>% do(timebout(.))
 
 #label months as factors
 timef$Month<-month.name[timef$MonthF]
-timef$Month<-factor(distf$Month,levels=month.name)
+timef$Month<-factor(timef$Month,levels=month.name)
 
-ggplot(timef,aes(x=Month,y=Days)) + geom_boxplot() + theme_bw()
+ggplot(timef,aes(x=Month,y=Days,fill=phistate)) + geom_boxplot() + theme_bw() + facet_wrap(~phistate,scales="free")
+ggsave("Figures/Duration.jpeg",height=4,width=9)
+```
+
+##Proportion of time allocation
+```{r}
+timef %>% group_by(Month,phistate) %>% summarise(s=sum(Days)) %>% dcast(Month~phistate) %>% summarise()
 ```
 
 #Time spent in grid cell
