@@ -161,7 +161,7 @@ Specify a duration, calculate the number of tracks and the number of removed poi
 
 ```{r}
 ##Time is the beginning of the first point.
-step_length=6
+step_length=12
 
 sxy<-split(mxy,mxy$Animal)
 
