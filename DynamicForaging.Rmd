@@ -506,6 +506,12 @@ ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),
 ggplot(data=mxy,aes(x=as.POSIXct(timestamp),y=as.factor(state))) + geom_line(aes(group=Track),size=1)+ theme_bw()  + facet_wrap(~individual.local.identifier,ncol=2,scales="free") + labs(x="Time",y="Behavior") 
 ```
 
+### As single timeline
+
+```{r}
+ggplot(data=mxy,aes(x=as.POSIXct(timestamp),y=as.factor(state))) + geom_line(aes(group=paste(Animal,Track)),size=1)+ theme_bw()  + labs(x="Time",y="Behavior") + facet_wrap(~Year,scales="free")
+```
+
 #Simulated tracks
 
 ```{r,fig.height=8,fig.width=12}
@@ -657,37 +663,125 @@ ggsave("Figures/TimeBetweenBouts.jpeg",height=4,width=6)
 #Distance between bouts
 
 ```{r}
-#function for calculating geographic distance between bouts
+#function for calculating points in a track
+trackdist<-function(a){
+pts<-SpatialPoints(cbind(a$x,a$y),CRS('+proj=longlat +ellps=WGS84'))
+distm<-spDists(pts,pts,longlat=T)
+
+#get the distance among all consecutive points
+    among<-matrix(nrow=length(pts)-1)
+    for(g in 1:length(pts)-1){
+          among[g]<-distm[g,g+1]
+    }
+      return(data.frame(km=sum(among)))
+}
+
+
+#function for calculating geographic distance between foraging bouts
 distbout<-function(a){
   
   a<-a %>% arrange(Animal,Track,step)
   
+  #get runs
   stater<-rle(as.numeric(a$phistate))
-  Index<-cumsum(stater$lengths[-length(stater$lengths)])
+  Index<-c(1,cumsum(stater$lengths))
   
-  if(length(Index) <= 1){distframe<-data.frame(NULL)} else {
-  out<-matrix(ncol=1,nrow=length(Index)-1)
+  #if(length(Index)==2){return(data.frame(NULL))}
+  
+  #label bouts
+  a$Bout<-NA
   for(x in 1:(length(Index)-1)){
-    pts<-mxy[c(Index[x],Index[x+1]+1),]
-    
-    pts<-SpatialPoints(cbind(pts$x,pts$y),CRS('+proj=longlat +ellps=WGS84'))
-    out[x]<-spDists(pts,pts,longlat=T)[1,2]
+    a$Bout[Index[x]:Index[x+1]]<-x
   }
   
-  distframe<-data.frame(Animal=unique(a$Animal),Track=unique(a$Track),Month=min(as.numeric(unique(a$Month))),km=out)
-  }
-  return(distframe)
-  }
+  #we don't know what happens before or after a track.
+  a<-a %>% filter(!Bout %in% c(min(Bout),max(Bout)))
+  
+  #only traveling bouts.
+  a<-a %>% filter(phistate=="Traveling")
+  
+  #Remove bouts that are only a few point.
+  #difftime(max(timestamp),min(timestamp))
+  keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>10)
+  a<-a %>% filter(Bout %in% keep_bouts$Bout)
+  
+  if(nrow(a)==0){return(data.frame(NULL))}
 
+  #for each traveling bout calculate the trackdist
+  sumbout<-a %>% group_by(Bout) %>% do(trackdist(.))
+  
+  #label each bout by the month at the beginning of the bout
+  return(a %>% group_by(Bout) %>% summarize(MonthF=min(MonthF)) %>% inner_join(sumbout))
+  }
+  
 #calculate distance between foraging bouts for all tracks
-distf<-mxy %>% group_by(Animal,Track) %>% do(distbout(.)) %>% mutate(Month=month.name[Month])
+distf<-mxy %>% group_by(Animal,Track) %>% do(distbout(.))
+
+#label months as factors
+distf$Month<-month.name[distf$MonthF]
 
 #average distance by month
-avg_dist<-distf %>% group_by(Month) %>% summarize(meankm=median(km),lower=quantile(km,0.05),upper=quantile(km,0.95))
+avg_dist<-distf %>% group_by(Month) %>% summarize(meankm=mean(km),lower=quantile(km,0.05),upper=quantile(km,0.95))
 
 avg_dist$Month<-factor(avg_dist$Month,levels=month.name)
+distf$Month<-factor(distf$Month,levels=month.name)
 
-ggplot(avg_dist,aes(x=Month,y=meankm)) + geom_pointrange(aes(y=meankm,ymin=lower,ymax=upper)) + theme_bw() + labs(y="Average distance between consecutive foraging bouts")
+ggplot(distf,aes(x=Month,y=km)) + geom_boxplot() + theme_bw()
+#ggplot(avg_dist,aes(x=Month,y=meankm)) + geom_pointrange(aes(y=meankm,ymin=lower,ymax=upper)) + theme_bw() + labs(y="Distance between ARS bouts")
+```
+
+
+#Time between bouts: Method II
+
+```{r}
+#function for calculating points in a track
+tracktime<-function(a){
+  return(data.frame(Days=difftime(max(a$timestamp),min(a$timestamp))))
+}
+
+
+#function for calculating geographic distance between foraging bouts
+timebout<-function(a){
+  
+  a<-a %>% arrange(Animal,Track,step)
+  
+  #get runs
+  stater<-rle(as.numeric(a$phistate))
+  Index<-c(1,cumsum(stater$lengths))
+  
+  #label bouts
+  a$Bout<-NA
+  for(x in 1:(length(Index)-1)){
+    a$Bout[Index[x]:Index[x+1]]<-x
+  }
+  
+  #we don't know what happens before or after a track.
+  a<-a %>% filter(!Bout %in% c(min(Bout),max(Bout)))
+  
+  #only traveling bouts.
+  #a<-a %>% filter(phistate=="Traveling")
+  
+  #Remove bouts that are only a few point.
+  keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>10)
+  a<-a %>% filter(Bout %in% keep_bouts$Bout)
+  
+  if(nrow(a)==0){return(data.frame(NULL))}
+
+  #for each traveling bout calculate the trackdist
+  sumbout<-a %>% group_by(Bout) %>% do(tracktime(.))
+  
+  #label each bout by the month at the beginning of the bout
+  return(a %>% group_by(Bout) %>% summarize(MonthF=min(MonthF),phistate=unique(phistate)) %>% inner_join(sumbout))
+  }
+  
+#calculate distance between foraging bouts for all tracks
+timef<-mxy %>% group_by(Animal,Track) %>% do(timebout(.))
+
+#label months as factors
+timef$Month<-month.name[timef$MonthF]
+timef$Month<-factor(distf$Month,levels=month.name)
+
+ggplot(timef,aes(x=Month,y=Days)) + geom_boxplot() + theme_bw()
 ```
 
 #Time spent in grid cell
