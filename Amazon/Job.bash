@@ -5,7 +5,7 @@ rm -rf /var/tmp/aws-mon.bak
 mv /var/tmp/aws-mon /var/tmp/aws-mon.bak
 
 #clone
-git clone git@github.com:bw4sz/WhaleShape.git --depth 1
+git clone git@github.com:bw4sz/WhaleShape.git --depth 1 -b 12hour --single-branch
 
 cd WhaleShape||sudo halt
 

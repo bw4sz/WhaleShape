@@ -639,7 +639,7 @@ ggplot(distf,aes(x=Month,y=km)) + geom_boxplot() + theme_bw()
 ggplot(avg_dist,aes(x=Month,y=meankm)) + geom_pointrange(aes(y=meankm,ymin=lower,ymax=upper)) + theme_bw() + labs(y="Distance between ARS bouts")
 ```
 
-#Time between bouts
+#Behavior duration
 
 ```{r,eval=F}
 #function for calculating points in a track
@@ -685,13 +685,14 @@ timef<-mxy %>% group_by(Animal,Track) %>% do(timebout(.))
 timef$Month<-month.name[timef$MonthF]
 timef$Month<-factor(timef$Month,levels=month.name)
 
-ggplot(timef,aes(x=Month,y=Days,fill=phistate)) + geom_boxplot() + theme_bw() + facet_wrap(~phistate,scales="free")
+ggplot(timef,aes(x=Month,y=Days,fill=phistate)) + geom_boxplot() + theme_bw() + facet_wrap(~phistate,scales="free") + labs("Bout Duration (Days)")
 ggsave("Figures/Duration.jpeg",height=4,width=9)
 ```
 
 ##Proportion of time allocation
 ```{r}
-timef %>% group_by(Month,phistate) %>% summarise(s=sum(Days)) %>% dcast(Month~phistate) %>% summarise()
+propf<-timef %>% group_by(Animal,Month,phistate) %>% summarise(s=sum(Days)) %>% dcast(Animal+Month~phistate,fill=0) %>% mutate(PropF=`Area-restricted Search`/(Traveling+`Area-restricted Search`),TotalTime=Traveling+`Area-restricted Search`)
+ggplot(propf[propf$TotalTime > 10,],aes(x=Month,y=PropF)) + geom_boxplot() + labs(y="Proportion of individual foraging")
 ```
 
 #Time spent in grid cell
