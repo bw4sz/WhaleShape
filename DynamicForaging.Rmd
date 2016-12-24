@@ -733,7 +733,7 @@ ggplot(distf,aes(x=Month,y=km)) + geom_boxplot() + theme_bw()
 
 #Time between bouts: Method II
 
-```{r}
+```{r,eval=F}
 #function for calculating points in a track
 tracktime<-function(a){
   return(data.frame(Days=difftime(max(a$timestamp),min(a$timestamp))))
