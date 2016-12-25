@@ -64,6 +64,9 @@ mxy<-mxy[!is.na(mxy$x),]
 #missing argos class
 mxy<-mxy[!is.na(mxy$argos.lc),]
 
+#get rid of z
+mxy<-mxy[!mxy$argos.lc=="Z",]
+
 #crop by extent
 d<-SpatialPointsDataFrame(cbind(mxy$x,mxy$y),data=mxy,proj4string=CRS("+proj=longlat +datum=WGS84"))
 
