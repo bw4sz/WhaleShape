@@ -301,7 +301,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,argos_clas
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=50000,n.burnin=48000,n.thin=4,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=500,n.burnin=0,n.thin=4,DIC=FALSE))
 }
 
 ```
@@ -666,7 +666,7 @@ timebout<-function(a){
   a<-a %>% filter(!Bout %in% c(min(Bout),max(Bout)))
   
   #Remove bouts that are only a few point.
-  keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>10)
+  keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>5)
   a<-a %>% filter(Bout %in% keep_bouts$Bout)
   
   if(nrow(a)==0){return(data.frame(NULL))}
@@ -780,5 +780,5 @@ ggsave("Figures/ResidencyMap.jpg",height=5,width=9,dpi=300)
 ```
 
 ```{r}
-save.image("DynamicForaging.RData")
+#save.image("DynamicForaging.RData")
 ```
