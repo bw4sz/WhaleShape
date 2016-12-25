@@ -647,7 +647,7 @@ ggplot(avg_dist,aes(x=Month,y=meankm)) + geom_pointrange(aes(y=meankm,ymin=lower
 
 #Behavior duration
 
-```{r,eval=F}
+```{r,eval=T}
 #function for calculating points in a track
 tracktime<-function(a){
   return(data.frame(Days=difftime(max(a$timestamp),min(a$timestamp))))
@@ -786,5 +786,5 @@ ggsave("Figures/ResidencyMap.jpg",height=5,width=9,dpi=300)
 ```
 
 ```{r}
-#save.image("DynamicForaging.RData")
+save.image("DynamicForaging.RData")
 ```
