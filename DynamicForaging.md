@@ -221,7 +221,7 @@ sink()
 
 ```
 ##      user    system   elapsed 
-##   337.529     3.925 20180.152
+##   310.489     2.761 27466.772
 ```
 
 
@@ -230,14 +230,14 @@ sink()
 
 ```
 ##             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells   1512755   80.8    3886542  207.6   3886542  207.6
-## Vcells 397431022 3032.2  889956371 6789.9 765594122 5841.1
+## Ncells   1484955   79.4    3886542  207.6   3886542  207.6
+## Vcells 324855749 2478.5  595979664 4547.0 586932806 4478.0
 ```
 
 ```
-##            used (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  1348159   72    3886542  207.6   3886542  207.6
-## Vcells 53212769  406  711965096 5431.9 765594122 5841.1
+##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
+## Ncells  1339619  71.6    3886542  207.6   3886542  207.6
+## Vcells 48858924 372.8  476783731 3637.6 586932806 4478.0
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-16-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-16-2.png)<!-- -->
@@ -259,28 +259,28 @@ sink()
 
 ```
 ##    parameter           par       mean        lower      upper
-## 1   alpha_mu alpha_mu[1,1] 0.89148610  0.813379382 0.95230902
-## 2   alpha_mu alpha_mu[2,1] 0.06902732  0.022237257 0.13281403
-## 3   alpha_mu alpha_mu[1,2] 0.91440407  0.862918057 0.95194997
-## 4   alpha_mu alpha_mu[2,2] 0.05957062  0.033107096 0.09181736
-## 5   alpha_mu alpha_mu[1,3] 0.91812786  0.872321301 0.95895730
-## 6   alpha_mu alpha_mu[2,3] 0.04392333  0.024772197 0.06946068
-## 7   alpha_mu alpha_mu[1,4] 0.83839337  0.759733913 0.91154048
-## 8   alpha_mu alpha_mu[2,4] 0.05390102  0.021270315 0.09378220
-## 9   alpha_mu alpha_mu[1,5] 0.90725130  0.813048520 0.97383379
-## 10  alpha_mu alpha_mu[2,5] 0.04774076  0.017936362 0.09041703
-## 11     gamma    gamma[1,1] 0.90900254  0.849480495 0.96553885
-## 12     gamma    gamma[2,1] 0.30951748  0.066968554 0.56577281
-## 13     gamma    gamma[1,2] 0.81296929  0.762397193 0.86223269
-## 14     gamma    gamma[2,2] 0.29106393  0.145580908 0.42729593
-## 15     gamma    gamma[1,3] 0.73781533  0.669270371 0.80166946
-## 16     gamma    gamma[2,3] 0.32294601  0.177058514 0.45539260
-## 17     gamma    gamma[1,4] 0.89656972  0.825410683 0.96235689
-## 18     gamma    gamma[2,4] 0.26319044  0.099880736 0.43539423
-## 19     gamma    gamma[1,5] 0.92385911  0.859276131 0.97712937
-## 20     gamma    gamma[2,5] 0.48539302  0.231033788 0.71825827
-## 21     theta      theta[1] 0.01466695 -0.006516048 0.03604936
-## 22     theta      theta[2] 3.16031770  2.980462414 3.36305546
+## 1   alpha_mu alpha_mu[1,1] 0.79911504  0.709578079 0.87882419
+## 2   alpha_mu alpha_mu[2,1] 0.18221404  0.106286737 0.27262687
+## 3   alpha_mu alpha_mu[1,2] 0.87521525  0.797213347 0.93728161
+## 4   alpha_mu alpha_mu[2,2] 0.12545542  0.066511750 0.19376344
+## 5   alpha_mu alpha_mu[1,3] 0.88035937  0.794183885 0.94721148
+## 6   alpha_mu alpha_mu[2,3] 0.07645840  0.034204327 0.13308496
+## 7   alpha_mu alpha_mu[1,4] 0.71933989  0.579038126 0.88551702
+## 8   alpha_mu alpha_mu[2,4] 0.19888271  0.085677771 0.37482966
+## 9   alpha_mu alpha_mu[1,5] 0.78064103  0.673360482 0.88772472
+## 10  alpha_mu alpha_mu[2,5] 0.08212042  0.044615297 0.13096435
+## 11     gamma    gamma[1,1] 0.92938694  0.880857852 0.97616141
+## 12     gamma    gamma[2,1] 0.14997536  0.021994950 0.30150048
+## 13     gamma    gamma[1,2] 0.82129437  0.764320374 0.88840877
+## 14     gamma    gamma[2,2] 0.09677665  0.008496352 0.21577093
+## 15     gamma    gamma[1,3] 0.78026837  0.705984467 0.86222291
+## 16     gamma    gamma[2,3] 0.07811164  0.006654297 0.19849520
+## 17     gamma    gamma[1,4] 0.92361753  0.814915133 0.98568102
+## 18     gamma    gamma[2,4] 0.07355322  0.004697610 0.21680054
+## 19     gamma    gamma[1,5] 0.94804402  0.886761967 0.99033996
+## 20     gamma    gamma[2,5] 0.39527745  0.225943881 0.56314738
+## 21     theta      theta[1] 0.01442024 -0.002641842 0.03248686
+## 22     theta      theta[2] 2.99316556  2.698923222 3.25775437
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
@@ -303,36 +303,33 @@ sink()
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
-#Simulated tracks
+### As single timeline
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 
+#Simulated tracks
+
+![](DynamicForaging_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
+
 ##Behavioral description
-
-## Predicted behavior duration
-
-
-
-![](DynamicForaging_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
-
-## Duration by month
-
-![](DynamicForaging_files/figure-html/unnamed-chunk-30-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-30-2.png)<!-- -->
 
 #Proportion of states by month
 
-![](DynamicForaging_files/figure-html/unnamed-chunk-31-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-31-2.png)<!-- -->
-
-#Time between foraging bouts
-
-![](DynamicForaging_files/figure-html/unnamed-chunk-32-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-32-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-32-3.png)<!-- -->
+![](DynamicForaging_files/figure-html/unnamed-chunk-29-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-29-2.png)<!-- -->
 
 #Distance between bouts
 
-![](DynamicForaging_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
+![](DynamicForaging_files/figure-html/unnamed-chunk-30-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-30-2.png)<!-- -->
+
+#Behavior duration
+
+![](DynamicForaging_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
+
+##Proportion of time allocation
+![](DynamicForaging_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 
 #Time spent in grid cell
 
-![](DynamicForaging_files/figure-html/unnamed-chunk-34-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-34-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-34-3.png)<!-- -->
+![](DynamicForaging_files/figure-html/unnamed-chunk-33-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-33-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-33-3.png)<!-- -->
 
 
