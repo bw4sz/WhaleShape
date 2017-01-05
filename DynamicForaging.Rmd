@@ -31,7 +31,6 @@ newModel<-T
 
 ##ggplot theme
 mytheme<-theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),panel.grid=element_blank())
-
 ```
 
 ```{r,eval=F}
@@ -76,8 +75,6 @@ b<-d[!is.na(d %over% cropoly)[,2],]
 
 mxy<-b@data
 
-#remove migration events, create user cut polygon
-
 #set datestamp
 mxy$timestamp<-as.POSIXct(mxy$timestamp,format="%Y-%m-%d %H:%M:%S.000")
 
@@ -85,8 +82,19 @@ mxy$timestamp<-as.POSIXct(mxy$timestamp,format="%Y-%m-%d %H:%M:%S.000")
 mxy$Month<-months(mxy$timestamp)
 mxy$Year<-years(mxy$timestamp)
 
+#remove migration events, create user cut polygon
+migration<-data.frame(Animal=c("121207","121210","123224","131130","123236","123232","112699","131127","121208","131136","131132","131133"),timestamp=c("2013-05-07 12:16:26","2013-04-30 02:01:51","2013-05-23 01:23:55","2016-04-27 00:53:21","2013-03-16 05:35:06","2013-04-25 05:09:21","2012-06-15 03:28:15","2016-07-15 00:02:46","2013-02-12 00:51:28","2016-06-30 00:18:11","2016-05-09 03:57:47","2016-07-05 13:26:44"))
+migration$timestamp<-as.POSIXct(migration$timestamp,format="%Y-%m-%d %H:%M:%S")
+
+mxy %>% group_by(Animal) %>% summarize(max(timestamp,na.rm=T)) %>% filter(Animal %in% migration$Animal)
+
+for(x in 1:nrow(migration)){
+    toremove<-which(mxy$Animal %in% migration$Animal[x] & mxy$timestamp > migration$timestamp[x])
+    mxy<-mxy[!(1:nrow(mxy) %in% toremove),]
+}           
+
 #Only austral sping and summer
-mxy<-mxy[mxy$Month %in% month.name[1:5],]
+mxy<-mxy[mxy$Month %in% month.name[1:6],]
 
 #remove empty timestamps
 mxy<-mxy[!is.na(mxy$timestamp),]
@@ -307,7 +315,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,argos_clas
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=50000,n.burnin=46000,n.thin=10,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=50000,n.burnin=47000,n.thin=10,DIC=FALSE))
 }
 
 ```
@@ -493,9 +501,10 @@ ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),
 ggmap(m)+geom_path(data=mxy, aes(x=x, y=y,col=phistate,group=paste(Animal,Track)),size=.2)  + facet_wrap(~Month,nrow=2)
 ggsave("Figures/SpatialPred.jpg",height=5,width=5)
 
-#Black and white version
-ggplot()+geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=1)  + borders(fill=NA,alpha=0.9,size=0.5) + coord_cartesian(ylim = c(-69,-62),xlim=c(-55,-72)) + theme_bw() + mytheme + scale_fill_manual(values=rep("NA",8)) + labs(col="Behavior") + scale_color_manual(values=c("grey10","grey60"))  + facet_wrap(~Month,nrow=1) + theme(legend.position="bottom")
-ggsave("Figures/SpatialPred_BW.jpg",height=3,width=10)
+#Pub version
+ggplot()+ theme_set(theme_gray(base_size = 18)) +geom_path(data=mxy, aes(x=x, y=y,col=bstate,group=paste(Animal,Track)),size=0.7)  + borders(fill="grey40",size=0.5) + coord_cartesian(ylim = c(-69,-62),xlim=c(-55,-72)) + theme_bw() + mytheme + scale_fill_manual(values=rep("NA",8)) + labs(col="Behavior") + scale_color_manual(values=c("deeppink","darkturquoise"))  + facet_wrap(~Month,nrow=2) + theme(legend.position="bottom") 
+
+ggsave("Figures/SpatialPred_BW.jpg",height=7,width=10)
 
 ```
 
@@ -571,7 +580,7 @@ ratio<-pc %>% filter(parameter=="state") %>% group_by(MonthA,Draw,chain,value) %
 
 ggplot(prop,aes(fill=as.factor(value),y=s,x=MonthA)) + geom_violin() + labs(x="Month",y="Hours",fill="Behavior") + scale_fill_discrete(label=c("Traveling","Area-restricted Search")) + theme_bw()
 
-ggplot(ratio,aes(y=b,x=MonthA)) + geom_boxplot() + labs(y="Proportion Area-restricted Search",x="Month") + theme_bw()  + scale_fill_brewer(palette="RdBu") + scale_y_continuous(labels = scales::percent)
+ggplot(ratio,aes(y=b,x=MonthA)) + geom_boxplot() + labs(y="Proportion of Observations in Area-restricted Search",x="Month") + theme_bw()  + scale_fill_brewer(palette="RdBu") + scale_y_continuous(labels = scales::percent)
 ggsave("Figures/PropForaging.jpeg",height=3,width=5)
 ```
 
@@ -601,23 +610,18 @@ distbout<-function(a){
   stater<-rle(as.numeric(a$phistate))
   Index<-c(0,cumsum(stater$lengths))
   
-  #if(length(Index)==2){return(data.frame(NULL))}
-  
   #label bouts
   a$Bout<-NA
   for(x in 1:(length(Index)-1)){
     a$Bout[(Index[x]+1):Index[x+1]]<-x
   }
   
-  #we don't know what happens before or after a track.
-  a<-a %>% filter(!Bout %in% c(min(Bout),max(Bout)))
   
   #only traveling bouts.
   a<-a %>% filter(phistate=="Traveling")
-  
   #Remove bouts that are only a few point.
-  #difftime(max(timestamp),min(timestamp))
-  keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>10)
+
+  keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>5)
   a<-a %>% filter(Bout %in% keep_bouts$Bout)
   
   if(nrow(a)==0){return(data.frame(NULL))}
@@ -669,7 +673,7 @@ timebout<-function(a){
   }
   
   #we don't know what happens before or after a track.
-  a<-a %>% filter(!Bout %in% c(min(Bout),max(Bout)))
+  #a<-a %>% filter(!Bout %in% c(min(Bout),max(Bout)))
   
   #Remove bouts that are only a few point.
   keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>5)
@@ -691,18 +695,66 @@ timef<-mxy %>% group_by(Animal,Track) %>% do(timebout(.))
 timef$Month<-month.name[timef$MonthF]
 timef$Month<-factor(timef$Month,levels=month.name)
 
-ggplot(timef,aes(x=Month,y=Days,fill=phistate)) + geom_boxplot() + theme_bw() + facet_wrap(~phistate,scales="free") + labs("Bout Duration (Days)")
-ggsave("Figures/Duration.jpeg",height=4,width=9)
+#remove one observation in Feb, such an outlier.
+
+timef %>% arrange(desc(Days))
+
+ggplot(timef,aes(x=Month,y=Days)) + geom_boxplot() + theme_bw() + facet_wrap(~phistate,scales="free") + labs(y="Bout Duration (Days)")
+ggsave("Figures/Duration.jpg",height=4,width=9)
 ```
 
 ##Proportion of time allocation
 ```{r}
-propf<-timef %>% group_by(Animal,Month,phistate) %>% summarise(s=sum(Days)) %>% dcast(Animal+Month~phistate,fill=0) %>% mutate(PropF=`Area-restricted Search`/(Traveling+`Area-restricted Search`),TotalTime=Traveling+`Area-restricted Search`)
-ggplot(propf[propf$TotalTime > 10,],aes(x=Month,y=PropF)) + geom_boxplot() + labs(y="Proportion of individual foraging")
+propf<-timef %>% group_by(Month,phistate) %>% summarise(s=sum(Days)) %>% dcast(Month~phistate,fill=0) %>% mutate(PropF=`Area-restricted Search`/(Traveling+`Area-restricted Search`),TotalTime=Traveling+`Area-restricted Search`)
+ggplot(propf[,],aes(x=Month,y=PropF)) + geom_point(size=3) + labs(y="Proportion of time in ARS") + theme_bw()
+propf
+ggsave("Figures/Prop.jpg",height=2,width=9)
+```
+
+## Number of bouts
+
+```{r,eval=T}
+#function for calculating geographic distance between foraging bouts
+numberbout<-function(a){
+  
+  a<-a %>% arrange(Animal,Track,step)
+  
+  #get runs
+  stater<-rle(as.numeric(a$phistate))
+  Index<-c(0,cumsum(stater$lengths))
+  
+  #label bouts
+  a$Bout<-NA
+  for(x in 1:(length(Index)-1)){
+    a$Bout[(Index[x]+1):Index[x+1]]<-x
+  }
+  
+  #Remove bouts that are only a few point.
+  keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>10)
+  a<-a %>% filter(Bout %in% keep_bouts$Bout)
+  
+  if(nrow(a)==0){return(data.frame(NULL))}
+
+  #for each traveling bout calculate the trackdist
+  sumbout<-a %>% group_by(phistate) %>% summarize(n=length(unique(Bout)),MonthF=min(MonthF))
+  
+  #label each bout by the month at the beginning of the bout
+  return(sumbout)  
+  }
+  
+#calculate distance between foraging bouts for all tracks
+boutf<-mxy %>% group_by(Animal,Track) %>% do(numberbout(.))
+
+#label months as factors
+boutf$Month<-month.name[boutf$MonthF]
+boutf$Month<-factor(boutf$Month,levels=month.name)
+
+ggplot(boutf,aes(x=Month,y=n,fill=phistate)) + geom_boxplot() + theme_bw() + facet_wrap(~phistate,scales="free") + labs(y="Number of ARS Bouts")
+ggsave("Figures/Duration.jpeg",height=4,width=9)
 ```
 
 #Time spent in grid cell
-
+## All years
 ```{r,fig.height=7,fig.width=11}
 
 #time in each cell function
@@ -770,6 +822,7 @@ plot(restime(mxy))
 
 #split tracks by month data, just get foraging data
 md<-split(mxy[mxy$bstate %in% "Area-restricted Search",],mxy[mxy$bstate %in% "Area-restricted Search","Month"],drop=T)
+#md<-split(mxy,mxy$Month,drop=T)
 
 r<-stack(lapply(md,restime))
 
@@ -781,8 +834,25 @@ f<-melt(data.frame(rasterToPoints(r)),id.vars=c("x","y"))
 #remove NA's
 f<-f %>% filter(!is.na(value))
 
-ggmap(m) + geom_tile(data=f,aes(x=x,y=y,fill=value))  + scale_fill_continuous(low="blue",high="red") + labs(fill="Days")  + facet_wrap(~variable,nrow=1)  + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="") + theme(legend.position="bottom")
-ggsave("Figures/ResidencyMap.jpg",height=5,width=9,dpi=300)
+ggplot() + geom_tile(data=f,aes(x=x,y=y,fill=value))  + scale_fill_continuous(low="blue",high="red") + labs(fill="Days")  + facet_wrap(~variable,nrow=3)  + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + labs(x="",y="") +  borders(fill="grey70",size=0.5) + coord_cartesian(ylim = c(-69,-62),xlim=c(-55,-72)) + theme_bw() + mytheme
+ggsave("Figures/ResidencyMap.jpg",height=9,width=6,dpi=300)
+```
+
+##Add in sea ice
+
+```{r}
+ice<-read.csv("InputData/SeaIce_AllYears_polygons.csv")
+
+#match ice naming
+ice$variable<-ice$Month
+ice<-ice %>% filter(variable %in% unique(f$variable))
+ice$variable<-factor(ice$variable,levels=month.name[1:5])
+
+#ice 
+
+ggplot() + geom_tile(data=f,aes(x=x,y=y,fill=value))  +scale_fill_continuous(low="blue",high="red") + labs(fill="Whale ARS Days",x="",y="",col="Sea Ice")  + theme(axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank()) + theme_bw() + mytheme +geom_polygon(data=ice[,],aes(x=long,y=lat,col=as.factor(Year),group=paste(Year,group)),alpha=0.4,fill="lightsteelblue1",size=1)+  facet_wrap(~variable,nrow=2)  + coord_cartesian(ylim = c(-69,-62),xlim=c(-55,-72)) +  borders(fill="grey70",size=0.5)  + scale_color_manual(values=c("grey20","grey40","grey60","grey90"))
+ggsave("Figures/ResidencyMapIce.jpg",height=7,width=10,dpi=300)
+
 ```
 
 ```{r}
