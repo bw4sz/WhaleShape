@@ -8,22 +8,21 @@ Ben Weinstein
 
 
 ```
-## Source: local data frame [12 x 2]
-## 
-##    Animal max(timestamp, na.rm = T)
-##     (int)                    (time)
-## 1  112699       2012-06-17 03:57:31
-## 2  121207       2013-05-09 18:49:37
-## 3  121208       2013-02-18 07:52:02
-## 4  121210       2013-05-05 07:44:41
-## 5  123224       2013-05-24 12:13:18
-## 6  123232       2013-09-28 07:28:23
-## 7  123236       2013-03-18 11:26:09
-## 8  131127       2016-07-15 00:58:36
-## 9  131130       2016-04-29 17:30:06
-## 10 131132       2016-05-10 12:44:39
-## 11 131133       2016-07-05 10:55:56
-## 12 131136       2016-06-30 10:57:06
+## # A tibble: 12 × 2
+##    Animal `max(timestamp, na.rm = T)`
+##     <int>                      <dttm>
+## 1  112699         2012-06-17 03:57:31
+## 2  121207         2013-05-09 18:49:37
+## 3  121208         2013-02-18 07:52:02
+## 4  121210         2013-05-05 07:44:41
+## 5  123224         2013-05-24 12:13:18
+## 6  123232         2013-09-28 07:28:23
+## 7  123236         2013-03-18 11:26:09
+## 8  131127         2016-07-15 00:58:36
+## 9  131130         2016-04-29 17:30:06
+## 10 131132         2016-05-10 12:44:39
+## 11 131133         2016-07-05 10:55:56
+## 12 131136         2016-06-30 10:57:06
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
@@ -237,26 +236,11 @@ cat("
 sink()
 
 
-```
-##      user    system   elapsed 
-##   376.629     2.228 31671.461
-```
 
 
 
 ##Chains
 
-```
-##             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells   1510007   80.7    3886542  207.6   3886542  207.6
-## Vcells 303622995 2316.5  615471729 4695.7 524544016 4002.0
-```
-
-```
-##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  1342652  71.8    3886542  207.6   3886542  207.6
-## Vcells 46780009 357.0  492377383 3756.6 524544016 4002.0
-```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-16-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-16-2.png)<!-- -->
 
@@ -335,11 +319,11 @@ sink()
 
 ##Behavioral description
 
-#Proportion of states by month
+###Proportion of states by month
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-29-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-29-2.png)<!-- -->
 
-#Distance between bouts
+###Distance between bouts
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-30-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-30-2.png)<!-- -->
 
@@ -347,22 +331,60 @@ sink()
 
 
 ```
-## Source: local data frame [335 x 7]
-## Groups: Animal, Track [103]
+## Source: local data frame [180 x 7]
+## Groups: Animal, Track, Bout, phistate [180]
 ## 
-##    Animal Track  Bout MonthF               phistate      Days    Month
-##     (dbl) (dbl) (int)  (dbl)                 (fctr)     (dbl)   (fctr)
-## 1       1     1     1      1              Traveling 14.541667  January
-## 2       1     2     1      1              Traveling 11.889167  January
-## 3       1     3     1      1              Traveling 15.561389  January
-## 4       1     4     1      1              Traveling 22.269167  January
-## 5       1     5     1      1              Traveling 15.600278  January
-## 6       1     6     1      1 Area-restricted Search  2.603125  January
-## 7       1     7     1      2              Traveling 23.679444 February
-## 8       1     8     1      2              Traveling 13.104722 February
-## 9       1     9     1      2 Area-restricted Search  3.349606 February
-## 10      1    10     1      2              Traveling 22.118333 February
-## ..    ...   ...   ...    ...                    ...       ...      ...
+##    Animal Track  Bout  phistate MonthF     Days    Month
+##     <dbl> <dbl> <int>    <fctr>  <dbl>    <dbl>   <fctr>
+## 1       2     1     1 Traveling      1 16.15530  January
+## 2       8     1     5 Traveling      2 15.99264 February
+## 3      34     1     1 Traveling      1 14.97060  January
+## 4       2     1     3 Traveling      2 14.14994 February
+## 5       2     2     3 Traveling      3 13.98340    March
+## 6      40     1    10 Traveling      2 12.95641 February
+## 7      15     1     3 Traveling      2 12.03280 February
+## 8       6     1     5 Traveling      2 11.63674 February
+## 9      10     1     8 Traveling      3 11.43594    March
+## 10      8     1    13 Traveling      3 11.22565    March
+## # ... with 170 more rows
+```
+
+```
+## Source: local data frame [167 x 7]
+## Groups: Animal, Track, Bout, phistate [167]
+## 
+##    Animal Track  Bout               phistate MonthF     Days    Month
+##     <dbl> <dbl> <int>                 <fctr>  <dbl>    <dbl>   <fctr>
+## 1      17     1     3 Area-restricted Search      2 55.96274 February
+## 2      15     2     6 Area-restricted Search      3 29.45740    March
+## 3      28     1     1 Area-restricted Search      4 28.70588    April
+## 4      12     1     4 Area-restricted Search      2 22.97889 February
+## 5      40     1     9 Area-restricted Search      2 20.98398 February
+## 6      22     1     2 Area-restricted Search      4 20.89941    April
+## 7      35     2     7 Area-restricted Search      2 20.26384 February
+## 8      31     2     1 Area-restricted Search      2 18.91318 February
+## 9      13     1     1 Area-restricted Search      2 17.31207 February
+## 10     10     1     5 Area-restricted Search      3 16.77744    March
+## # ... with 157 more rows
+```
+
+```
+## Source: local data frame [347 x 7]
+## Groups: Animal, Track, Bout, phistate [347]
+## 
+##    Animal Track  Bout               phistate MonthF      Days    Month
+##     <dbl> <dbl> <int>                 <fctr>  <dbl>     <dbl>   <fctr>
+## 1       1     1     1              Traveling      1 0.6059028  January
+## 2       1     2     1              Traveling      1 0.4953819  January
+## 3       1     3     1              Traveling      1 0.6483912  January
+## 4       1     4     1              Traveling      1 0.9278819  January
+## 5       1     4     2 Area-restricted Search      1 0.5943171  January
+## 6       1     5     1              Traveling      1 0.6500116  January
+## 7       1     6     1 Area-restricted Search      1 2.6031250  January
+## 8       1     7     1              Traveling      2 0.9866435 February
+## 9       1     8     1              Traveling      2 0.5460301 February
+## 10      1     9     1 Area-restricted Search      2 3.3496065 February
+## # ... with 337 more rows
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
@@ -372,12 +394,12 @@ sink()
 
 ```
 ##      Month Traveling Area-restricted Search     PropF TotalTime
-## 1  January  291.8011              242.26443 0.4536230  534.0655
-## 2 February  447.4278              501.15394 0.5283192  948.5817
-## 3    March  221.2866              208.51360 0.4851408  429.8002
-## 4    April  162.5185              263.15661 0.6182100  425.6751
-## 5      May   50.3569              119.85499 0.7041517  170.2119
-## 6     June  127.9336               57.77661 0.3111116  185.7102
+## 1  January 136.03662              148.86355 0.5225113 284.90017
+## 2 February 224.76093              338.31553 0.6008341 563.07646
+## 3    March 115.52787              197.09106 0.6304515 312.61894
+## 4    April  49.18041              154.11640 0.7580857 203.29681
+## 5      May  28.23580               57.21779 0.6695774  85.45359
+## 6     June  15.21277               23.92109 0.6112633  39.13385
 ```
 
 ## Number of bouts

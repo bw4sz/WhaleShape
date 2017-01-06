@@ -33,9 +33,9 @@ newModel<-T
 mytheme<-theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),panel.grid=element_blank())
 ```
 
-```{r,eval=F}
+```{r,eval=T}
 #Load in data
-#load("DynamicForaging.RData")
+load("DynamicForaging.RData")
 #jags$recompile()
 newModel<-F
 ```
@@ -193,7 +193,7 @@ timed<-function(d,step_length){
     d[ends[w-1]:ends[w],"Track"]<-w-1
   }
   
-  #remove tracks that are shorter than three days
+  #remove tracks that are shorter than 24 hrs
   track_time<-d %>% group_by(Track) %>% summarize(mt=difftime(max(as.POSIXct(timestamp)),min(as.POSIXct(timestamp)),units="hours")) %>% filter(mt>=24) %>% .$Track
   
   d<-d[d$Track %in% track_time,]
@@ -303,7 +303,7 @@ ggplot(data=steps_all,aes(x=Track)) + geom_histogram() + labs(x="Subtracks per A
 ```{r,child="Bayesian/MultiSpecies.R",eval=T}
 ```
 
-```{r,eval=T}
+```{r,eval=newModel}
 #source jags file
 source("Bayesian/MultiSpecies.R")
 
@@ -315,7 +315,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,argos_clas
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=50000,n.burnin=47000,n.thin=10,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=70000,n.burnin=67000,n.thin=10,DIC=FALSE))
 }
 
 ```
@@ -572,7 +572,7 @@ ggsave("Figures/SimulatedTracks.jpg",dpi=300,height=4,width=7)
 
 ##Behavioral description
 
-#Proportion of states by month
+###Proportion of states by month
 
 ```{r}
 prop<-pc %>% filter(parameter=="state") %>% group_by(MonthA,Draw,chain,value) %>% summarize(s=n()) 
@@ -580,11 +580,11 @@ ratio<-pc %>% filter(parameter=="state") %>% group_by(MonthA,Draw,chain,value) %
 
 ggplot(prop,aes(fill=as.factor(value),y=s,x=MonthA)) + geom_violin() + labs(x="Month",y="Hours",fill="Behavior") + scale_fill_discrete(label=c("Traveling","Area-restricted Search")) + theme_bw()
 
-ggplot(ratio,aes(y=b,x=MonthA)) + geom_boxplot() + labs(y="Proportion of Observations in Area-restricted Search",x="Month") + theme_bw()  + scale_fill_brewer(palette="RdBu") + scale_y_continuous(labels = scales::percent)
+ggplot(ratio[,],aes(y=b,x=MonthA)) + geom_boxplot() + labs(y="Proportion of time in Area-restricted Search",x="Month") + theme_bw()  + scale_fill_brewer(palette="RdBu") + scale_y_continuous(labels = scales::percent)
 ggsave("Figures/PropForaging.jpeg",height=3,width=5)
 ```
 
-#Distance between bouts
+###Distance between bouts
 
 ```{r}
 #function for calculating points in a track
@@ -652,14 +652,9 @@ ggplot(avg_dist,aes(x=Month,y=meankm)) + geom_pointrange(aes(y=meankm,ymin=lower
 #Behavior duration
 
 ```{r,eval=T}
-#function for calculating points in a track
-tracktime<-function(a){
-  return(data.frame(Days=difftime(max(a$timestamp),min(a$timestamp))))
-}
 
-#function for calculating geographic distance between foraging bouts
-timebout<-function(a){
-  
+#get bouts, consecutive observations
+getBouts<-function(a){
   a<-a %>% arrange(Animal,Track,step)
   
   #get runs
@@ -672,41 +667,34 @@ timebout<-function(a){
     a$Bout[(Index[x]+1):Index[x+1]]<-x
   }
   
-  #we don't know what happens before or after a track.
-  #a<-a %>% filter(!Bout %in% c(min(Bout),max(Bout)))
-  
-  #Remove bouts that are only a few point.
-  keep_bouts<-a %>% group_by(Bout) %>% summarize(n=n()) %>% filter(n>5)
-  a<-a %>% filter(Bout %in% keep_bouts$Bout)
-  
-  if(nrow(a)==0){return(data.frame(NULL))}
+  return(a)
+}
 
-  #for each traveling bout calculate the trackdist
-  sumbout<-a %>% group_by(Bout) %>% do(tracktime(.))
-  
-  #label each bout by the month at the beginning of the bout
-  return(a %>% group_by(Bout) %>% summarize(MonthF=min(MonthF),phistate=unique(phistate)) %>% inner_join(sumbout))
-  }
-  
-#calculate distance between foraging bouts for all tracks
-timef<-mxy %>% group_by(Animal,Track) %>% do(timebout(.))
+#is nice to be able to plot individual bouts
+mxy<-mxy %>% group_by(Animal,Track) %>% do(getBouts(.)) %>% as.data.frame()
+
+#function for calculating points in a track
+tracktime<-function(a){
+  return(data.frame(MonthF=min(a$MonthF),Days=difftime(max(a$timestamp),min(a$timestamp),units="days")))
+}
+
+timef<-mxy %>% group_by(Animal,Track) %>% do(getBouts(.)) %>% group_by(Animal,Track,Bout,phistate) %>% do(tracktime(.))
 
 #label months as factors
 timef$Month<-month.name[timef$MonthF]
 timef$Month<-factor(timef$Month,levels=month.name)
 
-#remove one observation in Feb, such an outlier.
-
-timef %>% arrange(desc(Days))
-
-ggplot(timef,aes(x=Month,y=Days)) + geom_boxplot() + theme_bw() + facet_wrap(~phistate,scales="free") + labs(y="Bout Duration (Days)")
+timef %>% arrange(desc(Days)) %>% filter(phistate=="Traveling")
+timef %>% arrange(desc(Days)) %>% filter(phistate=="Area-restricted Search")
+timef
+ggplot(timef[timef$Days>1,],aes(x=Month,y=Days)) + geom_boxplot() + theme_bw() + facet_wrap(~phistate,scales="free") + labs(y="Bout Duration (Days)")
 ggsave("Figures/Duration.jpg",height=4,width=9)
 ```
 
 ##Proportion of time allocation
 ```{r}
 propf<-timef %>% group_by(Month,phistate) %>% summarise(s=sum(Days)) %>% dcast(Month~phistate,fill=0) %>% mutate(PropF=`Area-restricted Search`/(Traveling+`Area-restricted Search`),TotalTime=Traveling+`Area-restricted Search`)
-ggplot(propf[,],aes(x=Month,y=PropF)) + geom_point(size=3) + labs(y="Proportion of time in ARS") + theme_bw()
+ggplot(propf[,],aes(x=Month,y=PropF)) + geom_point(size=3) + geom_line(aes(group=1)) + labs(y="Proportion of time in ARS") + theme_bw()
 propf
 ggsave("Figures/Prop.jpg",height=2,width=9)
 ```
@@ -846,7 +834,7 @@ ice<-read.csv("InputData/SeaIce_AllYears_polygons.csv")
 #match ice naming
 ice$variable<-ice$Month
 ice<-ice %>% filter(variable %in% unique(f$variable))
-ice$variable<-factor(ice$variable,levels=month.name[1:5])
+ice$variable<-factor(ice$variable,levels=month.name[1:6])
 
 #ice 
 
