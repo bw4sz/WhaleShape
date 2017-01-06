@@ -93,8 +93,8 @@ for(x in 1:nrow(migration)){
     mxy<-mxy[!(1:nrow(mxy) %in% toremove),]
 }           
 
-#Only austral sping and summer
-mxy<-mxy[mxy$Month %in% month.name[1:6],]
+#Only austral sping and summer, not enough data for june and july
+mxy<-mxy[mxy$Month %in% month.name[1:5],]
 
 #remove empty timestamps
 mxy<-mxy[!is.na(mxy$timestamp),]
