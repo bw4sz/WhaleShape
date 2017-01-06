@@ -7,6 +7,24 @@ Ben Weinstein
 
 
 
+```
+## Source: local data frame [12 x 2]
+## 
+##    Animal max(timestamp, na.rm = T)
+##     (int)                    (time)
+## 1  112699       2012-06-17 03:57:31
+## 2  121207       2013-05-09 18:49:37
+## 3  121208       2013-02-18 07:52:02
+## 4  121210       2013-05-05 07:44:41
+## 5  123224       2013-05-24 12:13:18
+## 6  123232       2013-09-28 07:28:23
+## 7  123236       2013-03-18 11:26:09
+## 8  131127       2016-07-15 00:58:36
+## 9  131130       2016-04-29 17:30:06
+## 10 131132       2016-05-10 12:44:39
+## 11 131133       2016-07-05 10:55:56
+## 12 131136       2016-06-30 10:57:06
+```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
@@ -221,7 +239,7 @@ sink()
 
 ```
 ##      user    system   elapsed 
-##   310.489     2.761 27466.772
+##   376.629     2.228 31671.461
 ```
 
 
@@ -230,14 +248,14 @@ sink()
 
 ```
 ##             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells   1484955   79.4    3886542  207.6   3886542  207.6
-## Vcells 324855749 2478.5  595979664 4547.0 586932806 4478.0
+## Ncells   1510007   80.7    3886542  207.6   3886542  207.6
+## Vcells 303622995 2316.5  615471729 4695.7 524544016 4002.0
 ```
 
 ```
 ##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  1339619  71.6    3886542  207.6   3886542  207.6
-## Vcells 48858924 372.8  476783731 3637.6 586932806 4478.0
+## Ncells  1342652  71.8    3886542  207.6   3886542  207.6
+## Vcells 46780009 357.0  492377383 3756.6 524544016 4002.0
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-16-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-16-2.png)<!-- -->
@@ -258,29 +276,33 @@ sink()
 
 
 ```
-##    parameter           par       mean        lower      upper
-## 1   alpha_mu alpha_mu[1,1] 0.79911504  0.709578079 0.87882419
-## 2   alpha_mu alpha_mu[2,1] 0.18221404  0.106286737 0.27262687
-## 3   alpha_mu alpha_mu[1,2] 0.87521525  0.797213347 0.93728161
-## 4   alpha_mu alpha_mu[2,2] 0.12545542  0.066511750 0.19376344
-## 5   alpha_mu alpha_mu[1,3] 0.88035937  0.794183885 0.94721148
-## 6   alpha_mu alpha_mu[2,3] 0.07645840  0.034204327 0.13308496
-## 7   alpha_mu alpha_mu[1,4] 0.71933989  0.579038126 0.88551702
-## 8   alpha_mu alpha_mu[2,4] 0.19888271  0.085677771 0.37482966
-## 9   alpha_mu alpha_mu[1,5] 0.78064103  0.673360482 0.88772472
-## 10  alpha_mu alpha_mu[2,5] 0.08212042  0.044615297 0.13096435
-## 11     gamma    gamma[1,1] 0.92938694  0.880857852 0.97616141
-## 12     gamma    gamma[2,1] 0.14997536  0.021994950 0.30150048
-## 13     gamma    gamma[1,2] 0.82129437  0.764320374 0.88840877
-## 14     gamma    gamma[2,2] 0.09677665  0.008496352 0.21577093
-## 15     gamma    gamma[1,3] 0.78026837  0.705984467 0.86222291
-## 16     gamma    gamma[2,3] 0.07811164  0.006654297 0.19849520
-## 17     gamma    gamma[1,4] 0.92361753  0.814915133 0.98568102
-## 18     gamma    gamma[2,4] 0.07355322  0.004697610 0.21680054
-## 19     gamma    gamma[1,5] 0.94804402  0.886761967 0.99033996
-## 20     gamma    gamma[2,5] 0.39527745  0.225943881 0.56314738
-## 21     theta      theta[1] 0.01442024 -0.002641842 0.03248686
-## 22     theta      theta[2] 2.99316556  2.698923222 3.25775437
+##    parameter           par       mean       lower      upper
+## 1   alpha_mu alpha_mu[1,1] 0.80786562 0.727588008 0.88232371
+## 2   alpha_mu alpha_mu[2,1] 0.17972076 0.102290383 0.27676781
+## 3   alpha_mu alpha_mu[1,2] 0.87876765 0.788978069 0.94197718
+## 4   alpha_mu alpha_mu[2,2] 0.12379987 0.062600037 0.22258545
+## 5   alpha_mu alpha_mu[1,3] 0.87763694 0.790017951 0.94699432
+## 6   alpha_mu alpha_mu[2,3] 0.07720100 0.037507166 0.12881625
+## 7   alpha_mu alpha_mu[1,4] 0.79396827 0.597860382 0.96872722
+## 8   alpha_mu alpha_mu[2,4] 0.13742905 0.018127646 0.27719349
+## 9   alpha_mu alpha_mu[1,5] 0.77982923 0.600140591 0.92319216
+## 10  alpha_mu alpha_mu[2,5] 0.08655756 0.040833160 0.15333219
+## 11  alpha_mu alpha_mu[1,6] 0.70118590 0.439565389 0.89685092
+## 12  alpha_mu alpha_mu[2,6] 0.26979798 0.025239661 0.77257307
+## 13     gamma    gamma[1,1] 0.92061890 0.873644343 0.96821525
+## 14     gamma    gamma[2,1] 0.17773231 0.035652292 0.32477815
+## 15     gamma    gamma[1,2] 0.81774154 0.762449776 0.88000820
+## 16     gamma    gamma[2,2] 0.09282394 0.006583999 0.21763372
+## 17     gamma    gamma[1,3] 0.77062799 0.683809107 0.85829430
+## 18     gamma    gamma[2,3] 0.08840825 0.005607181 0.21804059
+## 19     gamma    gamma[1,4] 0.84942208 0.716427984 0.96984570
+## 20     gamma    gamma[2,4] 0.11623297 0.006300703 0.32940711
+## 21     gamma    gamma[1,5] 0.72444491 0.574943397 0.88725878
+## 22     gamma    gamma[2,5] 0.41410676 0.228432706 0.58101952
+## 23     gamma    gamma[1,6] 0.87783287 0.744588038 0.97280848
+## 24     gamma    gamma[2,6] 0.33936652 0.047593343 0.67648245
+## 25     theta      theta[1] 0.02566977 0.008399520 0.04154484
+## 26     theta      theta[2] 3.11191766 2.835687052 3.33142447
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
@@ -323,13 +345,51 @@ sink()
 
 #Behavior duration
 
+
+```
+## Source: local data frame [335 x 7]
+## Groups: Animal, Track [103]
+## 
+##    Animal Track  Bout MonthF               phistate      Days    Month
+##     (dbl) (dbl) (int)  (dbl)                 (fctr)     (dbl)   (fctr)
+## 1       1     1     1      1              Traveling 14.541667  January
+## 2       1     2     1      1              Traveling 11.889167  January
+## 3       1     3     1      1              Traveling 15.561389  January
+## 4       1     4     1      1              Traveling 22.269167  January
+## 5       1     5     1      1              Traveling 15.600278  January
+## 6       1     6     1      1 Area-restricted Search  2.603125  January
+## 7       1     7     1      2              Traveling 23.679444 February
+## 8       1     8     1      2              Traveling 13.104722 February
+## 9       1     9     1      2 Area-restricted Search  3.349606 February
+## 10      1    10     1      2              Traveling 22.118333 February
+## ..    ...   ...   ...    ...                    ...       ...      ...
+```
+
 ![](DynamicForaging_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
 
 ##Proportion of time allocation
 ![](DynamicForaging_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 
-#Time spent in grid cell
+```
+##      Month Traveling Area-restricted Search     PropF TotalTime
+## 1  January  291.8011              242.26443 0.4536230  534.0655
+## 2 February  447.4278              501.15394 0.5283192  948.5817
+## 3    March  221.2866              208.51360 0.4851408  429.8002
+## 4    April  162.5185              263.15661 0.6182100  425.6751
+## 5      May   50.3569              119.85499 0.7041517  170.2119
+## 6     June  127.9336               57.77661 0.3111116  185.7102
+```
 
-![](DynamicForaging_files/figure-html/unnamed-chunk-33-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-33-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-33-3.png)<!-- -->
+## Number of bouts
+
+![](DynamicForaging_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
+
+#Time spent in grid cell
+## All years
+![](DynamicForaging_files/figure-html/unnamed-chunk-34-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-34-2.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-34-3.png)<!-- -->
+
+##Add in sea ice
+
+![](DynamicForaging_files/figure-html/unnamed-chunk-35-1.png)<!-- -->
 
 
