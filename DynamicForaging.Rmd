@@ -42,7 +42,7 @@ newModel<-F
 
 ```{r}
 #read data
-mdat<-read.csv("InputData/Antarctic Humpback overlap with krill fisheries -3085052751565071394.csv")
+mdat<-read.csv("InputData/Humpback Whales Megaptera novaeangliae West Antarctic Peninsula-3343066988628153526.csv")
 #standardize column names to match the simulation
 #Create an animal tag.
 mxy <- as(mdat, "data.frame")
@@ -50,21 +50,13 @@ mxy$Animal<-mxy$individual.local.identifier
 mxy$x<-mxy$location.long
 mxy$y<-mxy$location.lat
 
-#remove minke whales, they should already be gone.
-minke<-c("131117","131118","131120","154184")
-mxy<-mxy[!mxy$individual.local.identifier %in% minke,]
-
+mxy$argos.lc<-mxy$argos.iq
+mxy$argos.iq<-NULL
 #grab set of animals
 #mxy<-mxy[mxy$Animal %in% c("131143","131142","123232","123236"),]
 
-#empty coordinates
-mxy<-mxy[!is.na(mxy$x),]
-
-#missing argos class
-mxy<-mxy[!is.na(mxy$argos.lc),]
-
-#get rid of z
-mxy<-mxy[!mxy$argos.lc=="Z",]
+#get rid of z class 
+mxy<-mxy[!mxy$argos.lc==c("B","Z"),]
 
 #crop by extent
 d<-SpatialPointsDataFrame(cbind(mxy$x,mxy$y),data=mxy,proj4string=CRS("+proj=longlat +datum=WGS84"))
@@ -83,7 +75,7 @@ mxy$Month<-months(mxy$timestamp)
 mxy$Year<-years(mxy$timestamp)
 
 #remove migration events, create user cut polygon
-migration<-data.frame(Animal=c("121207","121210","123224","131130","123236","123232","112699","131127","121208","131136","131132","131133","112738"),timestamp=c("2013-05-07 12:16:26","2013-04-30 02:01:51","2013-05-23 01:23:55","2016-04-27 00:53:21","2013-03-16 05:35:06","2013-04-25 05:09:21","2012-06-15 03:28:15","2016-07-15 00:02:46","2013-02-12 00:51:28","2016-06-30 00:18:11","2016-05-09 03:57:47","2016-07-05 13:26:44","2013-04-01 17:14:04"))
+migration<-data.frame(Animal=c("121207","121210","123224","131130","123236","123232","112699","131127","121208","131136","131132","131133"),timestamp=c("2013-05-07 12:16:26","2013-04-30 02:01:51","2013-05-23 01:23:55","2016-04-27 00:53:21","2013-03-16 05:35:06","2013-04-25 05:09:21","2012-06-15 03:28:15","2016-07-15 00:02:46","2013-02-12 00:51:28","2016-06-30 00:18:11","2016-05-09 03:57:47","2016-07-05 13:26:44"))
 migration$timestamp<-as.POSIXct(migration$timestamp,format="%Y-%m-%d %H:%M:%S")
 
 mxy %>% group_by(Animal) %>% summarize(max(timestamp,na.rm=T)) %>% filter(Animal %in% migration$Animal)
@@ -94,7 +86,7 @@ for(x in 1:nrow(migration)){
 }           
 
 #Only austral sping and summer, not enough data for june and july
-mxy<-mxy[mxy$Month %in% month.name[1:5],]
+mxy<-mxy[mxy$Month %in% month.name[1:6],]
 
 #remove empty timestamps
 mxy<-mxy[!is.na(mxy$timestamp),]
