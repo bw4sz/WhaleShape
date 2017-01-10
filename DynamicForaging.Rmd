@@ -56,7 +56,7 @@ mxy$argos.iq<-NULL
 #mxy<-mxy[mxy$Animal %in% c("131143","131142","123232","123236"),]
 
 #get rid of z class 
-mxy<-mxy[!mxy$argos.lc==c("B","Z"),]
+mxy<-mxy[!mxy$argos.lc %in% c("B","Z"),]
 
 #crop by extent
 d<-SpatialPointsDataFrame(cbind(mxy$x,mxy$y),data=mxy,proj4string=CRS("+proj=longlat +datum=WGS84"))
@@ -267,7 +267,7 @@ obs<-acast(obs,Animal~Track~step~jStep~variable)
 MonthIndex<-acast(mxy,Animal~Track~step,value.var="Month",fun=function(x) names(which.max(table(x))) )
 
 #argos error class array
-mxy$argos.lc<-factor(mxy$argos.lc,levels=c(3,2,1,0,"A","B"))
+mxy$argos.lc<-factor(mxy$argos.lc,levels=c(3,2,1,0,"A"))
 mxy$numargos<-as.numeric(mxy$argos.lc)
 obs_class<-acast(mxy,Animal~Track~step~jStep,value.var="numargos")
 ```
@@ -307,7 +307,7 @@ data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,argos_clas
 pt<-c("theta","gamma","phi","alpha_mu","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=100000,n.burnin=97000,n.thin=8,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=70000,n.burnin=67000,n.thin=8,DIC=FALSE))
 }
 
 ```
