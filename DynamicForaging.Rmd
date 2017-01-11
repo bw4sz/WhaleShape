@@ -267,7 +267,7 @@ obs<-acast(obs,Animal~Track~step~jStep~variable)
 MonthIndex<-acast(mxy,Animal~Track~step,value.var="Month",fun=function(x) names(which.max(table(x))) )
 
 #argos error class array
-mxy$argos.lc<-factor(mxy$argos.lc,levels=c(3,2,1,0,"A"))
+mxy$argos.lc<-factor(mxy$argos.lc,levels=c(3,2,1,0,"A","B"))
 mxy$numargos<-as.numeric(mxy$argos.lc)
 obs_class<-acast(mxy,Animal~Track~step~jStep,value.var="numargos")
 ```

@@ -840,3 +840,22 @@ Warning: Permanently added 'ec2-35-166-39-160.us-west-2.compute.amazonaws.com,35
 Cloning into 'WhaleShape'...
 Switched to a new branch 'i-0b24d9c45c995f976'
 Connection reset by 35.166.39.160
+Warning: Permanently added 'ec2-35-165-154-75.us-west-2.compute.amazonaws.com,35.165.154.75' (ECDSA) to the list of known hosts.
+Cloning into 'WhaleShape'...
+Switched to a new branch 'i-066d0ee0652bb59b7'
+[i-066d0ee0652bb59b7 63998b7] ec2 run complete
+ 11 files changed, 219 insertions(+), 415 deletions(-)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-10-1.png (94%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-11-1.png (90%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-11-2.png (94%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-4-1.png (97%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-5-1.png (90%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-5-2.png (97%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-7-1.png (91%)
+ rewrite DynamicForaging_files/figure-html/unnamed-chunk-9-1.png (96%)
+ rewrite Figures/MonthTracks_BW.jpeg (95%)
+ rewrite Figures/RawTracks.jpg (93%)
+ rewrite run.txt (61%)
+To git@github.com:bw4sz/WhaleShape.git
+ * [new branch]      Branch i-066d0ee0652bb59b7 set up to track remote branch i-066d0ee0652bb59b7 from origin.
+i-066d0ee0652bb59b7 -> i-066d0ee0652bb59b7
