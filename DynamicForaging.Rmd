@@ -56,7 +56,7 @@ mxy$argos.iq<-NULL
 #mxy<-mxy[mxy$Animal %in% c("131143","131142","123232","123236"),]
 
 #get rid of z class 
-mxy<-mxy[!mxy$argos.lc %in% c("B","Z"),]
+mxy<-mxy[!mxy$argos.lc %in% c("Z"),]
 
 #crop by extent
 d<-SpatialPointsDataFrame(cbind(mxy$x,mxy$y),data=mxy,proj4string=CRS("+proj=longlat +datum=WGS84"))

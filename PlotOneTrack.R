@@ -13,3 +13,4 @@ a<-mxy %>% filter(individual.local.identifier=="112699") %>% as.data.frame()
 d<-SpatialPointsDataFrame(cbind(a$x,a$y),data=a,proj4string=CRS("+proj=longlat +datum=WGS84"))
 ggplot(a,aes(x=x,y=y)) + borders(fill="grey") + coord_cartesian(xlim=as.numeric(bbox(d)[1,]),ylim=as.numeric(bbox(d)[2,])) + theme_bw()  + geom_path(size=1,aes(group=Animal,col=bstate==phistate)) + facet_wrap(~Track) + mytheme
 
+

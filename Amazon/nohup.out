@@ -836,3 +836,7 @@ Switched to a new branch 'i-08bc7fe032c1cab05'
 To git@github.com:bw4sz/WhaleShape.git
  * [new branch]      Branch i-08bc7fe032c1cab05 set up to track remote branch i-08bc7fe032c1cab05 from origin.
 i-08bc7fe032c1cab05 -> i-08bc7fe032c1cab05
+Warning: Permanently added 'ec2-35-166-39-160.us-west-2.compute.amazonaws.com,35.166.39.160' (ECDSA) to the list of known hosts.
+Cloning into 'WhaleShape'...
+Switched to a new branch 'i-0b24d9c45c995f976'
+Connection reset by 35.166.39.160
