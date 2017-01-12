@@ -90,7 +90,7 @@ label: unnamed-chunk-3
 
   |                                                                         |.......                                                          |  11%
 label: unnamed-chunk-4
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.944973,-64.222367&zoom=4&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.880393,-64.097044&zoom=4&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |........                                                         |  12%
   ordinary text without R code
 
@@ -99,7 +99,7 @@ label: unnamed-chunk-5 (with options)
 List of 1
  $ fig.height: num 12
 
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.944973,-64.222367&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.880393,-64.097044&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
 
  # maps v3.1: updated 'world': all lakes moved to separate new #
  # 'lakes' database. Type '?world' or 'news(package="maps")'.  #
@@ -118,7 +118,7 @@ label: unnamed-chunk-7 (with options)
 List of 1
  $ fig.height: num 12
 
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.944973,-64.222367&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.880393,-64.097044&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |..............                                                   |  21%
   ordinary text without R code
 
@@ -130,7 +130,7 @@ Using jStep as value column: use value.var to override.
 
   |                                                                         |................                                                 |  25%
 label: unnamed-chunk-9
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.952865,-64.239649&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.893042,-64.121122&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |.................                                                |  26%
   ordinary text without R code
 
@@ -244,7 +244,7 @@ label: unnamed-chunk-22
 
   |                                                                         |..........................................                       |  64%
 label: unnamed-chunk-23
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.952865,-64.239649&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.893042,-64.121122&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |..........................................                       |  65%
   ordinary text without R code
 
@@ -253,7 +253,7 @@ label: unnamed-chunk-24 (with options)
 List of 1
  $ fig.width: num 9
 
-Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.952865,-64.239649&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
+Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-64.893042,-64.121122&zoom=5&size=640x640&scale=2&maptype=satellite&language=en-EN&sensor=false
   |                                                                         |............................................                     |  68%
   ordinary text without R code
 
@@ -295,6 +295,15 @@ label: unnamed-chunk-29
 
   |                                                                         |......................................................           |  83%
 label: unnamed-chunk-30
+Joining by: "Bout"
+Joining by: "Bout"
+Joining by: "Bout"
+Joining by: "Bout"
+Joining by: "Bout"
+Joining by: "Bout"
+Joining by: "Bout"
+Joining by: "Bout"
+Joining by: "Bout"
 Joining by: "Bout"
 Joining by: "Bout"
 Joining by: "Bout"
@@ -400,16 +409,15 @@ label: unnamed-chunk-36
 
 output file: DynamicForaging.knit.md
 
-/usr/local/bin/pandoc +RTS -K512m -RTS DynamicForaging.utf8.md --to html --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output DynamicForaging.html --smart --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/default.html --number-sections --variable 'theme:spacelab' --include-in-header /tmp/Rtmpp8Vzwk/rmarkdown-str5a28f7aa8d.html --mathjax --variable 'mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --no-highlight --variable highlightjs=/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/highlight --variable navigationjs=/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/navigation-1.0 
+/usr/local/bin/pandoc +RTS -K512m -RTS DynamicForaging.utf8.md --to html --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output DynamicForaging.html --smart --email-obfuscation none --self-contained --standalone --section-divs --table-of-contents --toc-depth 3 --template /home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/default.html --number-sections --variable 'theme:spacelab' --include-in-header /tmp/Rtmpn3CmVw/rmarkdown-str59b19ff6d4e.html --mathjax --variable 'mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --no-highlight --variable highlightjs=/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/highlight --variable navigationjs=/home/ubuntu/R/x86_64-pc-linux-gnu-library/3.3/rmarkdown/rmd/h/navigation-1.0 
 
 Output created: DynamicForaging.html
 Warning messages:
-1: Removed 29 rows containing missing values (geom_path). 
-2: Removed 29 rows containing missing values (geom_path). 
-3: Removed 29 rows containing missing values (geom_path). 
-4: Removed 29 rows containing missing values (geom_path). 
+1: Removed 46 rows containing missing values (geom_path). 
+2: Removed 46 rows containing missing values (geom_path). 
+3: Removed 46 rows containing missing values (geom_path). 
+4: Removed 46 rows containing missing values (geom_path). 
 5: In .fun(.value[0], ...) :
   no non-missing arguments to min; returning Inf
-6: Removed 38 rows containing missing values (geom_path). 
-7: In rbind_all(splitpc) : Unequal factor levels: coercing to character
-8: Removed 59452 rows containing non-finite values (stat_density). 
+6: In rbind_all(splitpc) : Unequal factor levels: coercing to character
+7: Removed 73500 rows containing non-finite values (stat_density). 
