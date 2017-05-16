@@ -19,6 +19,9 @@ dns=$(aws ec2 describe-instances --instance-ids $instance_id --query 'Reservatio
 #Wait for port to be ready, takes about a minute.
 sleep 60
 
+#make sure the Job.bash doesn't have awkward windows line endings
+sed -i 's/\r$//' Job.bash
+
 # copy over Job.bash to instance
 scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '/c/Users/Ben/.ssh/rstudio.pem' /c/Users/Ben/Documents/WhaleShape/Amazon/Job.bash ubuntu@$dns:~
 
