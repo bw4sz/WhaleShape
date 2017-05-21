@@ -8,22 +8,11 @@ Ben Weinstein
 
 
 ```
-## Source: local data frame [12 x 2]
-## 
-##    Animal max(timestamp, na.rm = T)
-##     (int)                    (time)
-## 1  112699       2012-06-17 03:57:31
-## 2  121207       2013-05-09 18:49:00
-## 3  121208       2013-02-18 07:52:00
-## 4  121210       2013-05-05 07:44:00
-## 5  123224       2013-05-24 12:13:00
-## 6  123232       2013-09-28 07:28:00
-## 7  123236       2013-03-18 11:26:00
-## 8  131127       2016-07-15 07:58:36
-## 9  131130       2016-04-30 00:30:06
-## 10 131132       2016-05-10 19:44:39
-## 11 131133       2016-07-05 20:26:44
-## 12 131136       2016-06-30 18:49:35
+## # A tibble: 2 × 2
+##   Animal `max(timestamp, na.rm = T)`
+##    <int>                      <dttm>
+## 1 123232         2013-09-28 07:28:00
+## 2 123236         2013-03-18 11:26:00
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
@@ -130,7 +119,7 @@ cat("
     for(t in 2:(steps[i,g]-1)){
     
     #Behavioral State at time T
-    phi[i,g,t,1] <- alpha_mu[state[i,g,t-1],Month[i,g,t]] 
+    phi[i,g,t,1] <- alpha[state[i,g,t-1],Month[i,g,t]] 
     phi[i,g,t,2] <- 1-phi[i,g,t,1]
     state[i,g,t] ~ dcat(phi[i,g,t,])
     
@@ -149,7 +138,7 @@ cat("
     }
     
     #Final behavior state
-    phi[i,g,steps[i,g],1] <- alpha_mu[state[i,g,steps[i,g]-1],Month[i,g,steps[i,g]-1]] 
+    phi[i,g,steps[i,g],1] <- alpha[state[i,g,steps[i,g]-1],Month[i,g,steps[i,g]-1]] 
     phi[i,g,steps[i,g],2] <- 1-phi[i,g,steps[i,g],1]
     state[i,g,steps[i,g]] ~ dcat(phi[i,g,steps[i,g],])
     
@@ -192,22 +181,35 @@ cat("
     for (m in 1:Months){
 
       #Intercepts
-      alpha_mu[1,m] ~ dbeta(1,1)
-      alpha_mu[2,m] ~ dbeta(1,1)
+      logit(alpha[1,m]) <- alpha_mu_invlogit[1,m]
+      alpha_mu_invlogit[1,m] ~ dnorm(alpha_mu[1],alpha_tau[1])
       
-      gamma[1,m] ~ dbeta(3,2)		## gamma for state 1
+      logit(alpha[2,m]) <- alpha_mu_invlogit[2,m]
+      alpha_mu_invlogit[2,m] ~ dnorm(alpha_mu[2],alpha_tau[2])
+      
+      gamma[1,m] ~ dnorm(gamma_mu,gamma_tau)		## gamma for state 1
       dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
       gamma[2,m] <- gamma[1,m] * dev[m]
     }
     
     ##Behavioral States
     
-    #Hierarchical structure across motnhs
+    #Hierarchical structure across months
     
-    #Variance
-    alpha_tau[1] ~ dt(0,1,1)I(0,)
-    alpha_tau[2] ~ dt(0,1,1)I(0,)
+    #Switching among states in inv.logit space
+    alpha_mu[1] ~ dnorm(0,0.386)
+    alpha_mu[2] ~ dnorm(0,0.386)
+
+    #Variance in state change per month
+    alpha_tau[1] ~ dgamma(0.0001,0.0001)
+    alpha_tau[2] ~ dgamma(0.0001,0.0001)
     
+    #spatial autocorrelation prior, we know that it has higher autocorrelation than state 2
+    gamma_mu ~ dnorm(0.8,500)
+    
+    #variance in gamma per month
+    gamma_tau ~ dgamma(0.0001,0.0001)
+
     #Probability of behavior switching 
     lambda[1] ~ dbeta(1,1)
     lambda[2] <- 1 - lambda[1]
@@ -238,8 +240,8 @@ sink()
 
 
 ```
-##      user    system   elapsed 
-##   313.671     3.234 56510.385
+##    user  system elapsed 
+##    3.14    1.36  312.33
 ```
 
 
@@ -247,15 +249,15 @@ sink()
 ##Chains
 
 ```
-##             used   (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells   1490195   79.6    3205452  171.2   3205452  171.2
-## Vcells 332757447 2538.8  609210048 4648.0 601969433 4592.7
+##            used (Mb) gc trigger  (Mb) max used  (Mb)
+## Ncells  1338933 71.6    2637877 140.9  2637877 140.9
+## Vcells 10281792 78.5   28941810 220.9 46990700 358.6
 ```
 
 ```
-##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  1330363  71.1    3205452  171.2   3205452  171.2
-## Vcells 43197765 329.6  487368038 3718.4 601969433 4592.7
+##           used (Mb) gc trigger  (Mb) max used  (Mb)
+## Ncells 1331479 71.2    2637877 140.9  2637877 140.9
+## Vcells 6799917 51.9   23153448 176.7 46990700 358.6
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-16-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-16-2.png)<!-- -->
@@ -276,33 +278,31 @@ sink()
 
 
 ```
-##    parameter           par       mean       lower      upper
-## 1   alpha_mu alpha_mu[1,1] 0.80974467 0.718033670 0.88743661
-## 2   alpha_mu alpha_mu[2,1] 0.18432108 0.105157153 0.29281197
-## 3   alpha_mu alpha_mu[1,2] 0.87739367 0.802696831 0.93672939
-## 4   alpha_mu alpha_mu[2,2] 0.12679749 0.064498206 0.20730521
-## 5   alpha_mu alpha_mu[1,3] 0.86975061 0.773088035 0.93994914
-## 6   alpha_mu alpha_mu[2,3] 0.08179307 0.042489490 0.13590807
-## 7   alpha_mu alpha_mu[1,4] 0.74908180 0.601480996 0.94995402
-## 8   alpha_mu alpha_mu[2,4] 0.17350926 0.049559723 0.33164349
-## 9   alpha_mu alpha_mu[1,5] 0.75396995 0.601945827 0.88102617
-## 10  alpha_mu alpha_mu[2,5] 0.07615231 0.032681773 0.13948078
-## 11  alpha_mu alpha_mu[1,6] 0.69111511 0.479917954 0.86381503
-## 12  alpha_mu alpha_mu[2,6] 0.17172694 0.061330279 0.32274025
-## 13     gamma    gamma[1,1] 0.91943745 0.869059019 0.96560491
-## 14     gamma    gamma[2,1] 0.17001743 0.027008133 0.32001713
-## 15     gamma    gamma[1,2] 0.82165383 0.767881529 0.88519502
-## 16     gamma    gamma[2,2] 0.08476265 0.007141743 0.20756066
-## 17     gamma    gamma[1,3] 0.77700814 0.693797183 0.86807351
-## 18     gamma    gamma[2,3] 0.09316598 0.007256009 0.23270703
-## 19     gamma    gamma[1,4] 0.88270542 0.730130324 0.97439356
-## 20     gamma    gamma[2,4] 0.09709066 0.004855736 0.32199482
-## 21     gamma    gamma[1,5] 0.75259925 0.597309716 0.90285379
-## 22     gamma    gamma[2,5] 0.39081676 0.223511359 0.56207378
-## 23     gamma    gamma[1,6] 0.84066572 0.689760784 0.96212763
-## 24     gamma    gamma[2,6] 0.40916347 0.130325658 0.66759611
-## 25     theta      theta[1] 0.02494263 0.008240810 0.04220695
-## 26     theta      theta[2] 3.09225319 2.866102956 3.31917406
+##    parameter          par          mean         lower        upper
+## 1      alpha   alpha[1,1]    0.65211986  5.404306e-01    0.8517767
+## 2      alpha   alpha[2,1]    0.61082579  1.465187e-01    0.9999966
+## 3      alpha   alpha[1,2]    0.67527356  5.657484e-01    0.8526467
+## 4      alpha   alpha[2,2]    0.14329323  1.560355e-05    0.2967653
+## 5      alpha   alpha[1,3]    0.63383094  4.394857e-01    0.8348255
+## 6      alpha   alpha[2,3]    0.15557480  1.468828e-02    0.2824026
+## 7      alpha   alpha[1,4]    0.65161435  5.454670e-01    0.8181779
+## 8      alpha   alpha[2,4]    0.13547877  7.162426e-08    0.3033733
+## 9   alpha_mu  alpha_mu[1]    0.66103027  1.965716e-01    1.5889844
+## 10  alpha_mu  alpha_mu[2]   -0.70449681 -1.938750e+00    1.7254560
+## 11 alpha_tau alpha_tau[1] 1543.05694105  1.375895e+00 9363.6339378
+## 12 alpha_tau alpha_tau[2] 1035.99819039  5.499725e-03 6628.2267366
+## 13     gamma   gamma[1,1]    0.36460916 -1.519343e-01    0.7647826
+## 14     gamma   gamma[2,1]    0.17093458 -7.931959e-02    0.4782040
+## 15     gamma   gamma[1,2]    0.01420102 -9.308402e-01    0.8699413
+## 16     gamma   gamma[2,2]   -0.21302089 -6.213377e-01    0.2545191
+## 17     gamma   gamma[1,3]    0.68965269  4.821787e-01    0.9611908
+## 18     gamma   gamma[2,3]    0.21915097  4.543892e-02    0.4227511
+## 19     gamma   gamma[1,4]    0.38866293 -4.070012e-01    1.1727539
+## 20     gamma   gamma[2,4]    0.12357352 -1.453662e-01    0.4255142
+## 21  gamma_mu     gamma_mu    0.77990701  7.047316e-01    0.8667016
+## 22 gamma_tau    gamma_tau   91.50130912  2.730430e-01  539.6248497
+## 23     theta     theta[1]    0.06008947 -1.086422e-01    0.1956118
+## 24     theta     theta[2]    3.13793313  2.706122e+00    3.4130639
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
@@ -347,60 +347,65 @@ sink()
 
 
 ```
-## Source: local data frame [183 x 7]
-## Groups: Animal, Track, Bout, phistate [183]
+## Source: local data frame [7 x 7]
+## Groups: Animal, Track, Bout, phistate [7]
 ## 
-##    Animal Track  Bout  phistate MonthF       Days    Month
-##     (dbl) (dbl) (int)    (fctr)  (dbl)      (dbl)   (fctr)
-## 1       1     1     1 Traveling      1 0.60590278  January
-## 2       1     2     1 Traveling      1 0.49538194  January
-## 3       1     3     1 Traveling      1 0.64839120  January
-## 4       1     4     1 Traveling      1 1.55869213  January
-## 5       1     5     1 Traveling      1 0.65001157  January
-## 6       1     6     1 Traveling      1 0.09663194  January
-## 7       1     7     1 Traveling      2 0.98664352 February
-## 8       1     8     1 Traveling      2 0.54603009 February
-## 9       1    10     1 Traveling      2 0.92159722 February
-## 10      1    11     1 Traveling      2 2.62181713 February
-## ..    ...   ...   ...       ...    ...        ...      ...
+##   Animal Track  Bout  phistate MonthF       Days    Month
+##    <dbl> <dbl> <int>    <fctr>  <dbl>      <dbl>   <fctr>
+## 1      4     1     1 Traveling      1 22.9841898  January
+## 2      3     1     1 Traveling      1 18.8980208  January
+## 3      2     1     4 Traveling      3  3.4944444    March
+## 4      1     1     3 Traveling      3  0.9847222    March
+## 5      1     1     5 Traveling      4  0.4659722    April
+## 6      1     1     1 Traveling      2  0.3548611 February
+## 7      2     1     2 Traveling      3  0.3215278    March
 ```
 
 ```
-## Source: local data frame [182 x 7]
-## Groups: Animal, Track, Bout, phistate [182]
+## Source: local data frame [12 x 7]
+## Groups: Animal, Track, Bout, phistate [12]
 ## 
 ##    Animal Track  Bout               phistate MonthF       Days    Month
-##     (dbl) (dbl) (int)                 (fctr)  (dbl)      (dbl)   (fctr)
-## 1       1     6     2 Area-restricted Search      1  2.1506597  January
-## 2       1     9     1 Area-restricted Search      2  3.3496065 February
-## 3       2     1     2 Area-restricted Search      2  0.1554977 February
-## 4       2     1     4 Area-restricted Search      2  0.1646644 February
-## 5       2     2     2 Area-restricted Search      3 11.1066551    March
-## 6       2     2     4 Area-restricted Search      3  0.4727778    March
-## 7       2     2     6 Area-restricted Search      4  2.4937847    April
-## 8       2     2     8 Area-restricted Search      4  3.9760880    April
-## 9       2     2    10 Area-restricted Search      4  0.9698958    April
-## 10      2     2    12 Area-restricted Search      4  0.9459606    April
-## ..    ...   ...   ...                    ...    ...        ...      ...
+##     <dbl> <dbl> <int>                 <fctr>  <dbl>      <dbl>   <fctr>
+## 1       1     1     2 Area-restricted Search      2 40.2013889 February
+## 2       2     1     1 Area-restricted Search      2 23.3729167 February
+## 3       4     1     2 Area-restricted Search      2 23.0990046 February
+## 4       1     1     6 Area-restricted Search      4 22.2701389    April
+## 5       4     2     1 Area-restricted Search      2 18.9131829 February
+## 6       3     1     2 Area-restricted Search      2 17.2529514 February
+## 7       1     1     4 Area-restricted Search      3 10.9611111    March
+## 8       2     1     3 Area-restricted Search      3  5.8590278    March
+## 9       2     1     5 Area-restricted Search      3  4.4194444    March
+## 10      4     4     1 Area-restricted Search      3  1.3696991    March
+## 11      4     5     1 Area-restricted Search      3  1.0939931    March
+## 12      4     3     1 Area-restricted Search      3  0.6460301    March
 ```
 
 ```
-## Source: local data frame [365 x 7]
-## Groups: Animal, Track, Bout, phistate [365]
+## Source: local data frame [19 x 7]
+## Groups: Animal, Track, Bout, phistate [19]
 ## 
 ##    Animal Track  Bout               phistate MonthF       Days    Month
-##     (dbl) (dbl) (int)                 (fctr)  (dbl)      (dbl)   (fctr)
-## 1       1     1     1              Traveling      1 0.60590278  January
-## 2       1     2     1              Traveling      1 0.49538194  January
-## 3       1     3     1              Traveling      1 0.64839120  January
-## 4       1     4     1              Traveling      1 1.55869213  January
-## 5       1     5     1              Traveling      1 0.65001157  January
-## 6       1     6     1              Traveling      1 0.09663194  January
-## 7       1     6     2 Area-restricted Search      1 2.15065972  January
-## 8       1     7     1              Traveling      2 0.98664352 February
-## 9       1     8     1              Traveling      2 0.54603009 February
-## 10      1     9     1 Area-restricted Search      2 3.34960648 February
-## ..    ...   ...   ...                    ...    ...        ...      ...
+##     <dbl> <dbl> <int>                 <fctr>  <dbl>      <dbl>   <fctr>
+## 1       1     1     1              Traveling      2  0.3548611 February
+## 2       1     1     2 Area-restricted Search      2 40.2013889 February
+## 3       1     1     3              Traveling      3  0.9847222    March
+## 4       1     1     4 Area-restricted Search      3 10.9611111    March
+## 5       1     1     5              Traveling      4  0.4659722    April
+## 6       1     1     6 Area-restricted Search      4 22.2701389    April
+## 7       2     1     1 Area-restricted Search      2 23.3729167 February
+## 8       2     1     2              Traveling      3  0.3215278    March
+## 9       2     1     3 Area-restricted Search      3  5.8590278    March
+## 10      2     1     4              Traveling      3  3.4944444    March
+## 11      2     1     5 Area-restricted Search      3  4.4194444    March
+## 12      3     1     1              Traveling      1 18.8980208  January
+## 13      3     1     2 Area-restricted Search      2 17.2529514 February
+## 14      4     1     1              Traveling      1 22.9841898  January
+## 15      4     1     2 Area-restricted Search      2 23.0990046 February
+## 16      4     2     1 Area-restricted Search      2 18.9131829 February
+## 17      4     3     1 Area-restricted Search      3  0.6460301    March
+## 18      4     4     1 Area-restricted Search      3  1.3696991    March
+## 19      4     5     1 Area-restricted Search      3  1.0939931    March
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
@@ -409,13 +414,11 @@ sink()
 ![](DynamicForaging_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 
 ```
-##      Month Traveling Area-restricted Search     PropF TotalTime
-## 1  January 140.53505              136.10722 0.4919972 276.64227
-## 2 February 219.13435              348.56628 0.6139966 567.70064
-## 3    March 104.49234              196.61933 0.6529781 301.11167
-## 4    April  49.41505              161.12559 0.7652945 210.54064
-## 5      May  23.88398               82.92531 0.7763867 106.80929
-## 6     June  16.20016               44.64175 0.7337335  60.84191
+##      Month  Traveling Area-restricted Search     PropF TotalTime
+## 1  January 41.8822106                0.00000 0.0000000  41.88221
+## 2 February  0.3548611              122.83944 0.9971195 123.19431
+## 3    March  4.8006944               24.34931 0.8353107  29.15000
+## 4    April  0.4659722               22.27014 0.9795052  22.73611
 ```
 
 ## Number of bouts

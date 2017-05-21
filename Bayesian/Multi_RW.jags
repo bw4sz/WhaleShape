@@ -35,7 +35,7 @@
     for(t in 2:(steps[i,g]-1)){
     
     #Behavioral State at time T
-    phi[i,g,t,1] <- alpha_mu[state[i,g,t-1],Month[i,g,t]] 
+    phi[i,g,t,1] <- alpha[state[i,g,t-1],Month[i,g,t]] 
     phi[i,g,t,2] <- 1-phi[i,g,t,1]
     state[i,g,t] ~ dcat(phi[i,g,t,])
     
@@ -54,7 +54,7 @@
     }
     
     #Final behavior state
-    phi[i,g,steps[i,g],1] <- alpha_mu[state[i,g,steps[i,g]-1],Month[i,g,steps[i,g]-1]] 
+    phi[i,g,steps[i,g],1] <- alpha[state[i,g,steps[i,g]-1],Month[i,g,steps[i,g]-1]] 
     phi[i,g,steps[i,g],2] <- 1-phi[i,g,steps[i,g],1]
     state[i,g,steps[i,g]] ~ dcat(phi[i,g,steps[i,g],])
     
@@ -97,22 +97,35 @@
     for (m in 1:Months){
 
       #Intercepts
-      alpha_mu[1,m] ~ dbeta(1,1)
-      alpha_mu[2,m] ~ dbeta(1,1)
+      logit(alpha[1,m]) <- alpha_mu_invlogit[1,m]
+      alpha_mu_invlogit[1,m] ~ dnorm(alpha_mu[1],alpha_tau[1])
       
-      gamma[1,m] ~ dbeta(3,2)		## gamma for state 1
+      logit(alpha[2,m]) <- alpha_mu_invlogit[2,m]
+      alpha_mu_invlogit[2,m] ~ dnorm(alpha_mu[2],alpha_tau[2])
+      
+      gamma[1,m] ~ dnorm(gamma_mu,gamma_tau)		## gamma for state 1
       dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
       gamma[2,m] <- gamma[1,m] * dev[m]
     }
     
     ##Behavioral States
     
-    #Hierarchical structure across motnhs
+    #Hierarchical structure across months
     
-    #Variance
-    alpha_tau[1] ~ dt(0,1,1)I(0,)
-    alpha_tau[2] ~ dt(0,1,1)I(0,)
+    #Switching among states in inv.logit space
+    alpha_mu[1] ~ dnorm(0,0.386)
+    alpha_mu[2] ~ dnorm(0,0.386)
+
+    #Variance in state change per month
+    alpha_tau[1] ~ dgamma(0.0001,0.0001)
+    alpha_tau[2] ~ dgamma(0.0001,0.0001)
     
+    #spatial autocorrelation prior, we know that it has higher autocorrelation than state 2
+    gamma_mu ~ dnorm(0.8,500)
+    
+    #variance in gamma per month
+    gamma_tau ~ dgamma(0.0001,0.0001)
+
     #Probability of behavior switching 
     lambda[1] ~ dbeta(1,1)
     lambda[2] <- 1 - lambda[1]

@@ -53,7 +53,7 @@ mxy$y<-mxy$location.lat
 mxy$argos.lc<-mxy$argos.iq
 mxy$argos.iq<-NULL
 #grab set of animals
-#mxy<-mxy[mxy$Animal %in% c("131143","131142","123232","123236"),]
+mxy<-mxy[mxy$Animal %in% c("131143","131142","123232","123236"),]
 
 #get rid of z class 
 mxy<-mxy[!mxy$argos.lc %in% c("Z"),]
@@ -304,10 +304,10 @@ R <- diag(c(1,1))
 data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,argos_class=obs_class,Month=MonthA,Months=max(MonthA,na.rm=T))
 
 #paramters to track
-pt<-c("theta","gamma","phi","alpha_mu","state")
+pt<-c("theta","gamma","phi","alpha","alpha_mu","alpha_tau","gamma_mu","gamma_tau","state")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=200000,n.burnin=199000,n.thin=1,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=40000,n.burnin=35000,n.thin=5,DIC=FALSE))
 }
 
 ```
@@ -351,7 +351,7 @@ splitpc[c("theta")]<-lapply(splitpc[c("theta")],function(x){
 
 ##Double index
 #single index
-splitpc[c("alpha_mu","gamma")]<-lapply(splitpc[c("alpha_mu","gamma")],function(x){
+splitpc[c("alpha","gamma")]<-lapply(splitpc[c("alpha","gamma")],function(x){
     sv<-data.frame(str_match(x$par,"(\\w+)\\[(\\d+),(\\d+)]"))[,3:4]
     colnames(sv)<-c("Behavior","Month")
     pc<-data.frame(x,sv)
@@ -385,7 +385,7 @@ pc<-merge(pc,mm,by=c("Animal","Track","step"),all.x=T)
 
 #complete level matching, ugly but successful
 
-pc[pc$parameter %in% c("alpha_mu","gamma"),]$MonthA<-month.name[as.numeric(pc$Month[pc$parameter %in% c("alpha_mu","gamma")])]
+pc[pc$parameter %in% c("alpha","gamma"),]$MonthA<-month.name[as.numeric(pc$Month[pc$parameter %in% c("alpha","gamma")])]
 pc$MonthA<-factor(pc$MonthA,levels=month.name)
 
 ```
@@ -428,7 +428,7 @@ ggsave("Figures/gammabox.jpeg",height=3,width=8)
 # Change in transition probabilities over time
 
 ```{r}
-a<-pc[pc$parameter %in% c("alpha_mu"),] %>% mutate(bstate=ifelse(Behavior==1,"Remain Traveling ","Switch to Traveling"))
+a<-pc[pc$parameter %in% c("alpha"),] %>% mutate(bstate=ifelse(Behavior==1,"Remain Traveling ","Switch to Traveling"))
 ggplot(data=a,aes(x=value,fill=MonthA)) + geom_density(alpha=0.7) + theme_bw()+ facet_wrap(~bstate,scales="free") + labs(fill="Month",x="Transition Probability") + scale_fill_brewer(palette="RdBu")
 ggsave("Figures/Alphaplot.jpeg",height=4,width=6,dpi=300)
 
@@ -449,10 +449,10 @@ ggplot(psum,aes(x=par,y=mean,ymax=upper,ymin=lower)) + geom_linerange() + geom_p
 gammadf<-pc %>% filter(parameter=="gamma") %>% group_by(MonthA,Behavior) %>% summarize(mean=mean(value))
 
 #format alpha
-alphadf<-pc %>% filter(parameter=="alpha_mu") %>% group_by(MonthA,Behavior) %>% summarize(mean=mean(value))
+alphadf<-pc %>% filter(parameter=="alpha") %>% group_by(MonthA,Behavior) %>% summarize(mean=mean(value))
 
 #both
-simdf<-pc %>% filter(parameter %in% c("gamma","alpha_mu")) %>% group_by(MonthA,Behavior,parameter) %>% summarize(mean=mean(value))
+simdf<-pc %>% filter(parameter %in% c("gamma","alpha")) %>% group_by(MonthA,Behavior,parameter) %>% summarize(mean=mean(value))
 
 ```
 
