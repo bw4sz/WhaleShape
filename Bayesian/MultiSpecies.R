@@ -104,7 +104,7 @@ cat("
       logit(alpha[2,m]) <- alpha_mu_invlogit[2,m]
       alpha_mu_invlogit[2,m] ~ dnorm(alpha_mu[2],alpha_tau[2])
       
-      gamma[1,m] ~ dnorm(gamma_mu,gamma_tau)		## gamma for state 1
+      gamma[1,m] ~ dbeta(3,2)		## gamma for state 1
       dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
       gamma[2,m] <- gamma[1,m] * dev[m]
     }
@@ -121,12 +121,6 @@ cat("
     alpha_tau[1] ~ dgamma(0.0001,0.0001)
     alpha_tau[2] ~ dgamma(0.0001,0.0001)
     
-    #spatial autocorrelation prior, we know that it has higher autocorrelation than state 2
-    gamma_mu ~ dnorm(0.8,100)
-    
-    #variance in gamma per month
-    gamma_tau ~ dgamma(0.0001,0.0001)
-
     #Probability of behavior switching 
     lambda[1] ~ dbeta(1,1)
     lambda[2] <- 1 - lambda[1]
