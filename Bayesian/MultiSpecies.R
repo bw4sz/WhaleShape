@@ -119,7 +119,7 @@ cat("
 
     #Variance in state change per month
     alpha_tau[1] ~ dunif(0,500)
-    alpha_tau[2] ~ dgamma(0,500)
+    alpha_tau[2] ~ dunif(0,500)
     
     #Probability of behavior switching 
     lambda[1] ~ dbeta(1,1)
