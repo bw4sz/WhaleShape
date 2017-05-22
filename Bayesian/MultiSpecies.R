@@ -131,7 +131,6 @@ cat("
     #reasonable variance keeps the chains from wandering.
     gamma_tau ~ dunif(100,500)
     
-
     ##Argos priors##
     #longitudinal argos precision, from Jonsen 2005, 2016, represented as precision not sd
     
