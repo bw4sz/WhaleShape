@@ -98,7 +98,7 @@ cat("
     for (m in 1:Months){
 
       #Intercepts
-      alpha[1,m]) ~ dbeta(1,1)
+      alpha[1,m] ~ dbeta(1,1)
 
       alpha[2,m] ~ dbeta(1,1)
       
