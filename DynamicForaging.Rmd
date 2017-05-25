@@ -53,7 +53,7 @@ mxy$y<-mxy$location.lat
 mxy$argos.lc<-mxy$argos.iq
 mxy$argos.iq<-NULL
 #grab set of animals
-mxy<-mxy[mxy$Animal %in% c("131143","131142","123232","123236"),]
+#mxy<-mxy[mxy$Animal %in% c("131143","131142","123232","123236"),]
 
 #get rid of z class 
 mxy<-mxy[!mxy$argos.lc %in% c("Z"),]
@@ -304,10 +304,10 @@ R <- diag(c(1,1))
 data=list(argos=obs,steps=steps,R=R,ind=ind,j=j,idx=idx,tracks=tracks,argos_class=obs_class,Month=MonthA,Months=max(MonthA,na.rm=T))
 
 #paramters to track
-pt<-c("theta","gamma","phi","alpha","state")
+pt<-c("theta","gamma","phi","alpha","alpha_mu","alpha_tau","state","gamma_mu","gamma_tau")
 
 if(newModel){
-  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=200000,n.burnin=198000,n.thin=2,DIC=FALSE))
+  system.time(jagM<-jags.parallel(model.file = "Bayesian/Multi_RW.jags",data=data,n.chains=2,parameters.to.save=pt,n.iter=300000,n.burnin=298000,n.thin=2,DIC=FALSE))
 }
 
 ```

@@ -103,16 +103,32 @@ cat("
       alpha[2,m] ~ dbeta(1,1)
       
       
-      gamma[1,m] ~ dbeta(3,2)		## gamma for state 1
+      gamma[1,m] ~ dnorm(gamma_mu,gamma_tau)		## gamma for state 1
       dev[m] ~ dbeta(1,1)			## a random deviate to ensure that gamma[1] > gamma[2]
       gamma[2,m] <- gamma[1,m] * dev[m]
     }
     
     ##Behavioral States
     
+    #Hierarchical structure across months
+    
+    #Switching among states in inv.logit space
+    alpha_mu[1] ~ dnorm(0,0.386)
+    alpha_mu[2] ~ dnorm(0,0.386)
+
+    #Variance in state change per month
+    alpha_tau[1] ~ dunif(0,5)
+    alpha_tau[2] ~ dunif(0,5)
+    
     #Probability of behavior switching 
     lambda[1] ~ dbeta(1,1)
     lambda[2] <- 1 - lambda[1]
+
+    #spatial autocorrelation priors, we know the true state is high autocorrelation
+    gamma_mu~dnorm(0.8,100)
+
+    #reasonable variance keeps the chains from wandering.
+    gamma_tau ~ dunif(100,500)
     
     ##Argos priors##
     #longitudinal argos precision, from Jonsen 2005, 2016, represented as precision not sd
