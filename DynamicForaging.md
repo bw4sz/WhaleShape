@@ -251,8 +251,8 @@ sink()
 
 
 ```
-##       user     system    elapsed 
-##    316.720      7.581 124584.851
+##      user    system   elapsed 
+##   337.338    14.828 97254.086
 ```
 
 
@@ -260,15 +260,15 @@ sink()
 ##Chains
 
 ```
-##             used   (Mb) gc trigger    (Mb)   max used    (Mb)
-## Ncells   1490299   79.6    3205452   171.2    3205452   171.2
-## Vcells 739201394 5639.7 1679167163 12811.1 1438345085 10973.8
+##              used    (Mb) gc trigger    (Mb)   max used    (Mb)
+## Ncells    1490299    79.6    3205452   171.2    3205452   171.2
+## Vcells 1714633394 13081.7 4032004763 30761.8 3457122303 26375.8
 ```
 
 ```
-##            used  (Mb) gc trigger    (Mb)   max used    (Mb)
-## Ncells  1330370  71.1    3205452   171.2    3205452   171.2
-## Vcells 73446613 560.4 1343333730 10248.9 1438345085 10973.8
+##             used   (Mb) gc trigger    (Mb)   max used    (Mb)
+## Ncells   1330370   71.1    3205452   171.2    3205452   171.2
+## Vcells 146016614 1114.1 3225603810 24609.5 3457122303 26375.8
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-16-1.png)<!-- -->![](DynamicForaging_files/figure-html/unnamed-chunk-16-2.png)<!-- -->
@@ -290,38 +290,38 @@ sink()
 
 ```
 ##    parameter          par         mean         lower        upper
-## 1      alpha   alpha[1,1]   0.82985183   0.757276168   0.89494832
-## 2      alpha   alpha[2,1]   0.14870634   0.088521962   0.22125110
-## 3      alpha   alpha[1,2]   0.87234851   0.806092500   0.93350723
-## 4      alpha   alpha[2,2]   0.12547703   0.069816201   0.19209975
-## 5      alpha   alpha[1,3]   0.86134201   0.790019193   0.92559452
-## 6      alpha   alpha[2,3]   0.08341207   0.045995641   0.12362528
-## 7      alpha   alpha[1,4]   0.82101250   0.673145389   0.93086268
-## 8      alpha   alpha[2,4]   0.11827340   0.051983898   0.21239208
-## 9      alpha   alpha[1,5]   0.78254551   0.655569001   0.88971177
-## 10     alpha   alpha[2,5]   0.07210024   0.037075782   0.11830773
-## 11     alpha   alpha[1,6]   0.76955497   0.619808124   0.88967533
-## 12     alpha   alpha[2,6]   0.11071368   0.046928260   0.19887422
-## 13  alpha_mu  alpha_mu[1]   1.57654645   1.046605996   2.17108201
-## 14  alpha_mu  alpha_mu[2]  -2.12426098  -2.661344264  -1.58575105
-## 15 alpha_tau alpha_tau[1]   3.35741130   1.303858375   4.88609145
-## 16 alpha_tau alpha_tau[2]   3.30996426   1.301489406   4.88603178
-## 17     gamma   gamma[1,1]   0.91533035   0.864729729   0.96749980
-## 18     gamma   gamma[2,1]   0.17646786   0.038511418   0.32275673
-## 19     gamma   gamma[1,2]   0.82954973   0.775843564   0.88459227
-## 20     gamma   gamma[2,2]   0.08951457   0.006189414   0.21818810
-## 21     gamma   gamma[1,3]   0.80724553   0.733755917   0.88201749
-## 22     gamma   gamma[2,3]   0.08300320   0.005826999   0.21469995
-## 23     gamma   gamma[1,4]   0.86088381   0.755799767   0.98791016
-## 24     gamma   gamma[2,4]   0.12959253   0.008392384   0.35007613
-## 25     gamma   gamma[1,5]   0.81883591   0.721104567   0.91825853
-## 26     gamma   gamma[2,5]   0.38616397   0.215901987   0.54658313
-## 27     gamma   gamma[1,6]   0.86107821   0.752434303   0.97947881
-## 28     gamma   gamma[2,6]   0.39524535   0.114662059   0.67628137
-## 29  gamma_mu     gamma_mu   0.84635848   0.782682984   0.90992783
-## 30 gamma_tau    gamma_tau 300.62122733 122.629365266 477.54624052
-## 31     theta     theta[1]   0.02566601   0.008396155   0.04298138
-## 32     theta     theta[2]   3.08670289   2.873875730   3.30701563
+## 1      alpha   alpha[1,1]   0.83802019   0.761248126   0.90612053
+## 2      alpha   alpha[2,1]   0.14317890   0.084073800   0.21495309
+## 3      alpha   alpha[1,2]   0.87296859   0.807546737   0.92467307
+## 4      alpha   alpha[2,2]   0.12249091   0.071840545   0.18916900
+## 5      alpha   alpha[1,3]   0.86305844   0.786676613   0.92539809
+## 6      alpha   alpha[2,3]   0.08023776   0.045901482   0.12386840
+## 7      alpha   alpha[1,4]   0.81645308   0.668781346   0.93813263
+## 8      alpha   alpha[2,4]   0.11736292   0.047220365   0.20650919
+## 9      alpha   alpha[1,5]   0.78277762   0.656528137   0.88449402
+## 10     alpha   alpha[2,5]   0.07049474   0.037936518   0.11173555
+## 11     alpha   alpha[1,6]   0.76821363   0.619891322   0.88894542
+## 12     alpha   alpha[2,6]   0.10854330   0.045065706   0.19556304
+## 13  alpha_mu  alpha_mu[1]   1.58447391   1.007321285   2.15959609
+## 14  alpha_mu  alpha_mu[2]  -2.16539180  -2.694175247  -1.64174412
+## 15 alpha_tau alpha_tau[1]   3.34698452   1.283325269   4.85325825
+## 16 alpha_tau alpha_tau[2]   3.33273827   1.274820878   4.86538508
+## 17     gamma   gamma[1,1]   0.91296259   0.862549491   0.96496316
+## 18     gamma   gamma[2,1]   0.17617872   0.037863949   0.32390327
+## 19     gamma   gamma[1,2]   0.83134324   0.780860273   0.88737858
+## 20     gamma   gamma[2,2]   0.08535385   0.006840522   0.20630532
+## 21     gamma   gamma[1,3]   0.80865222   0.735332620   0.88794686
+## 22     gamma   gamma[2,3]   0.07734333   0.005983412   0.19668083
+## 23     gamma   gamma[1,4]   0.86514312   0.754764822   0.99033609
+## 24     gamma   gamma[2,4]   0.10780413   0.006218684   0.29597768
+## 25     gamma   gamma[1,5]   0.81909457   0.716411572   0.92365736
+## 26     gamma   gamma[2,5]   0.38637429   0.210061579   0.55143390
+## 27     gamma   gamma[1,6]   0.86634345   0.755787930   0.98500252
+## 28     gamma   gamma[2,6]   0.38447246   0.110143467   0.65417152
+## 29  gamma_mu     gamma_mu   0.84739652   0.783185851   0.91265592
+## 30 gamma_tau    gamma_tau 298.64687846 122.076514596 477.39130746
+## 31     theta     theta[1]   0.02440948   0.007619716   0.04175364
+## 32     theta     theta[2]   3.07400912   2.855138705   3.29013549
 ```
 
 ![](DynamicForaging_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
@@ -366,12 +366,12 @@ sink()
 
 
 ```
-## Source: local data frame [169 x 7]
-## Groups: Animal, Track, Bout, phistate [169]
+## Source: local data frame [166 x 7]
+## Groups: Animal, Track, Bout, phistate [166]
 ## 
 ##    Animal Track  Bout  phistate MonthF      Days    Month
 ##     (dbl) (dbl) (int)    (fctr)  (dbl)     (dbl)   (fctr)
-## 1       1     1     1 Traveling      1 0.1170949  January
+## 1       1     1     1 Traveling      1 0.6059028  January
 ## 2       1     2     1 Traveling      1 0.4953819  January
 ## 3       1     3     1 Traveling      1 0.6483912  January
 ## 4       1     4     1 Traveling      1 1.5586921  January
@@ -385,40 +385,40 @@ sink()
 ```
 
 ```
-## Source: local data frame [181 x 7]
-## Groups: Animal, Track, Bout, phistate [181]
+## Source: local data frame [177 x 7]
+## Groups: Animal, Track, Bout, phistate [177]
 ## 
 ##    Animal Track  Bout               phistate MonthF       Days    Month
 ##     (dbl) (dbl) (int)                 (fctr)  (dbl)      (dbl)   (fctr)
-## 1       1     1     2 Area-restricted Search      1  0.1399769  January
-## 2       1     6     1 Area-restricted Search      1  2.6031250  January
-## 3       1     9     1 Area-restricted Search      2  3.3496065 February
-## 4       2     1     2 Area-restricted Search      2  0.1554977 February
-## 5       2     2     2 Area-restricted Search      3  0.1447917    March
-## 6       2     2     4 Area-restricted Search      3 11.1066551    March
-## 7       2     2     6 Area-restricted Search      3  0.9433218    March
-## 8       2     2     8 Area-restricted Search      4  1.9837269    April
-## 9       2     2    10 Area-restricted Search      4  3.9760880    April
-## 10      2     2    12 Area-restricted Search      4  0.1050231    April
+## 1       1     6     1 Area-restricted Search      1  2.6031250  January
+## 2       1     9     1 Area-restricted Search      2  3.3496065 February
+## 3       2     1     2 Area-restricted Search      2  0.1564352 February
+## 4       2     1     4 Area-restricted Search      2  0.1554977 February
+## 5       2     2     2 Area-restricted Search      3 11.1066551    March
+## 6       2     2     4 Area-restricted Search      3  0.9433218    March
+## 7       2     2     6 Area-restricted Search      4  1.9837269    April
+## 8       2     2     8 Area-restricted Search      4  3.9760880    April
+## 9       2     2    10 Area-restricted Search      4  0.1050231    April
+## 10      2     2    12 Area-restricted Search      4  0.9947569    April
 ## ..    ...   ...   ...                    ...    ...        ...      ...
 ```
 
 ```
-## Source: local data frame [350 x 7]
-## Groups: Animal, Track, Bout, phistate [350]
+## Source: local data frame [343 x 7]
+## Groups: Animal, Track, Bout, phistate [343]
 ## 
 ##    Animal Track  Bout               phistate MonthF      Days    Month
 ##     (dbl) (dbl) (int)                 (fctr)  (dbl)     (dbl)   (fctr)
-## 1       1     1     1              Traveling      1 0.1170949  January
-## 2       1     1     2 Area-restricted Search      1 0.1399769  January
-## 3       1     2     1              Traveling      1 0.4953819  January
-## 4       1     3     1              Traveling      1 0.6483912  January
-## 5       1     4     1              Traveling      1 1.5586921  January
-## 6       1     5     1              Traveling      1 0.6500116  January
-## 7       1     6     1 Area-restricted Search      1 2.6031250  January
-## 8       1     7     1              Traveling      2 0.9866435 February
-## 9       1     8     1              Traveling      2 0.5460301 February
-## 10      1     9     1 Area-restricted Search      2 3.3496065 February
+## 1       1     1     1              Traveling      1 0.6059028  January
+## 2       1     2     1              Traveling      1 0.4953819  January
+## 3       1     3     1              Traveling      1 0.6483912  January
+## 4       1     4     1              Traveling      1 1.5586921  January
+## 5       1     5     1              Traveling      1 0.6500116  January
+## 6       1     6     1 Area-restricted Search      1 2.6031250  January
+## 7       1     7     1              Traveling      2 0.9866435 February
+## 8       1     8     1              Traveling      2 0.5460301 February
+## 9       1     9     1 Area-restricted Search      2 3.3496065 February
+## 10      1    10     1              Traveling      2 0.9215972 February
 ## ..    ...   ...   ...                    ...    ...       ...      ...
 ```
 
@@ -429,12 +429,12 @@ sink()
 
 ```
 ##      Month Traveling Area-restricted Search     PropF TotalTime
-## 1  January 121.63677              140.97767 0.5368238 262.61444
-## 2 February 213.52203              351.44615 0.6220636 564.96817
-## 3    March 122.74743              205.16181 0.6256664 327.90924
-## 4    April  47.94513              154.80477 0.7635258 202.74990
+## 1  January 121.93544              142.51822 0.5389157 264.45366
+## 2 February 222.33936              331.34093 0.5984337 553.68029
+## 3    March 110.77988              236.50453 0.6810111 347.28441
+## 4    April  44.79596              150.25373 0.7703356 195.04969
 ## 5      May  24.35963               82.92464 0.7729431 107.28427
-## 6     June  16.04763               44.74221 0.7360146  60.78984
+## 6     June  17.38661               44.18263 0.7176088  61.56924
 ```
 
 ## Number of bouts
