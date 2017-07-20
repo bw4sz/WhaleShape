@@ -331,7 +331,7 @@ gc()
 #bind chains
 pc<-melt(jagM$BUGSoutput$sims.array)
 
-rm(jagM)
+#rm(jagM)
 gc()
 
 colnames(pc)<-c("Draw","chain","par","value")
