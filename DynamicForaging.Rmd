@@ -312,6 +312,10 @@ if(newModel){
 
 ```
 
+```{r}
+save.image("DynamicForaging.RData")
+```
+
 ```{r,eval=F}
 #update function
 recompile(jagM)

@@ -944,3 +944,8 @@ Warning: Permanently added 'ec2-35-167-254-27.us-west-2.compute.amazonaws.com,35
 Cloning into 'WhaleShape'...
 Warning: Permanently added the RSA host key for IP address '192.30.255.113' to the list of known hosts.
 Switched to a new branch 'i-0a0fae8a363672436'
+Warning: Permanently added 'ec2-34-210-133-8.us-west-2.compute.amazonaws.com,34.210.133.8' (ECDSA) to the list of known hosts.
+Cloning into 'WhaleShape'...
+Warning: Permanently added the RSA host key for IP address '192.30.255.112' to the list of known hosts.
+Switched to a new branch 'i-0151cff64a5a557c5'
+Connection reset by 34.210.133.8
