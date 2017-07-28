@@ -53,7 +53,7 @@ mxy$y<-mxy$location.lat
 mxy$argos.lc<-mxy$argos.iq
 mxy$argos.iq<-NULL
 #grab set of animals
-#mxy<-mxy[mxy$Animal %in% c("131143","131142","123232","123236"),]
+#mxy<-mxy[mxy$Animal %in% c("123232","123236"),]
 
 #get rid of z class 
 mxy<-mxy[!mxy$argos.lc %in% c("Z"),]
@@ -312,14 +312,17 @@ if(newModel){
 
 ```
 
-```{r}
-save.image("DynamicForaging.RData")
-```
-
 ```{r,eval=F}
 #update function
 recompile(jagM)
 jagM <- update(jagM,n.iter=300,n.burnin=0,n.thin=0) 
+```
+
+##Check Gelman Rubin
+
+```{r}
+summar<-head(jagM$BUGSoutput$summary,30)
+write.csv(summar,"rhat.csv")
 ```
 
 ##Chains
