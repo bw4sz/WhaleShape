@@ -957,3 +957,4 @@ Warning: Permanently added 'ec2-52-43-126-24.us-west-2.compute.amazonaws.com,52.
 Cloning into 'WhaleShape'...
 Warning: Permanently added the RSA host key for IP address '192.30.255.113' to the list of known hosts.
 Switched to a new branch 'i-0884f571af352794c'
+Connection reset by 52.43.126.24
