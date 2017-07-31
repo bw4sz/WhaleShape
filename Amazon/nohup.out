@@ -958,3 +958,16 @@ Cloning into 'WhaleShape'...
 Warning: Permanently added the RSA host key for IP address '192.30.255.113' to the list of known hosts.
 Switched to a new branch 'i-0884f571af352794c'
 Connection reset by 52.43.126.24
+Warning: Permanently added 'ec2-35-165-138-23.us-west-2.compute.amazonaws.com,35.165.138.23' (ECDSA) to the list of known hosts.
+fatal: could not create work tree dir 'WhaleShape'.: Permission denied
+./Job.bash: line 12: cd: WhaleShape: No such file or directory
+fatal: Not a git repository (or any parent up to mount point /dev)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+./Job.bash: line 21: run.txt: Permission denied
+fatal: Not a git repository (or any parent up to mount point /dev)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: Not a git repository (or any parent up to mount point /dev)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+fatal: Not a git repository (or any parent up to mount point /dev)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+Connection reset by 35.165.138.23

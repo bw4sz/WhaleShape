@@ -4,8 +4,6 @@
 rm -rf /var/tmp/aws-mon.bak
 mv /var/tmp/aws-mon /var/tmp/aws-mon.bak
 
-cd /dev
-
 #clone
 git clone --depth 1  git@github.com:bw4sz/WhaleShape.git
 
