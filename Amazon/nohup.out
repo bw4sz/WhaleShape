@@ -971,3 +971,7 @@ Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 fatal: Not a git repository (or any parent up to mount point /dev)
 Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
 Connection reset by 35.165.138.23
+Warning: Permanently added 'ec2-34-213-129-193.us-west-2.compute.amazonaws.com,34.213.129.193' (ECDSA) to the list of known hosts.
+Cloning into 'WhaleShape'...
+Warning: Permanently added the RSA host key for IP address '192.30.255.113' to the list of known hosts.
+Switched to a new branch 'i-034ca803bd639b22b'
